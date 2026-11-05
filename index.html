@@ -19,8 +19,13 @@
       text-align: center;
     }
 
-    main { width: min(100%, 850px); }
-    h1 { margin: 4px 0; }
+    main {
+      width: min(100%, 850px);
+    }
+
+    h1 {
+      margin: 4px 0;
+    }
 
     #hud {
       display: flex;
@@ -28,6 +33,7 @@
       gap: 12px;
       margin: 10px 0;
       font-weight: bold;
+      flex-wrap: wrap;
     }
 
     canvas {
@@ -64,11 +70,58 @@
       font-weight: bold;
       box-shadow: 0 4px 0 #523bc5;
       touch-action: none;
+      cursor: pointer;
     }
 
-    #jump { background: #ff6599; box-shadow: 0 4px 0 #d33f76; }
-    #restart { min-height: 44px; font-size: 1rem; }
-    button { cursor: pointer; }
+    #jump {
+      background: #ff6599;
+      box-shadow: 0 4px 0 #d33f76;
+    }
+
+    #restart {
+      min-height: 44px;
+      font-size: 1rem;
+    }
+
+    .start-panel {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      background: rgba(18, 24, 35, 0.24);
+      border-radius: 18px;
+    }
+
+    .start-box {
+      background: rgba(255,255,255,0.9);
+      border-radius: 18px;
+      padding: 18px 20px;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.16);
+      max-width: 320px;
+      margin: auto;
+    }
+
+    .start-box h2 {
+      margin: 0 0 10px;
+      font-size: 2rem;
+    }
+
+    .start-box p {
+      margin: 0 0 14px;
+      font-weight: 700;
+    }
+
+    .start-box button {
+      border: 0;
+      background: linear-gradient(#7d68ff, #5d46d8);
+      color: white;
+      font-weight: bold;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-size: 1.05rem;
+      cursor: pointer;
+      box-shadow: 0 5px 0 #4736ae;
+    }
   </style>
 </head>
 <body>
@@ -77,15 +130,22 @@
 
     <div id="hud">
       <span>🪙 Coins: <span id="coins">0</span></span>
-      <span>➡️ Get to the flag!</span>
+      <span>🚩 Goal: reach the flag!</span>
     </div>
 
-    <canvas id="game" width="800" height="420"
-      aria-label="Platform jumping game"></canvas>
+    <div style="position:relative;">
+      <canvas id="game" width="800" height="420" aria-label="Platform jumping game"></canvas>
 
-    <p id="message">
-      Use ← → and Space, or the buttons below. Jump over the gaps!
-    </p>
+      <div id="startPanel" class="start-panel">
+        <div class="start-box">
+          <h2>JUMP!</h2>
+          <p>Collect coins, dodge enemies, and reach the flag.</p>
+          <button id="startBtn">Play</button>
+        </div>
+      </div>
+    </div>
+
+    <p id="message">Press play to start.</p>
 
     <div class="controls">
       <button id="left" aria-label="Move left">⬅️</button>
@@ -93,7 +153,7 @@
       <button id="right" aria-label="Move right">➡️</button>
     </div>
 
-    <p><button id="restart">Start over</button></p>
+    <p><button id="restart">Restart</button></p>
   </main>
 
   <script>
@@ -101,18 +161,20 @@
     const ctx = canvas.getContext("2d");
     const coinsDisplay = document.getElementById("coins");
     const message = document.getElementById("message");
+    const startPanel = document.getElementById("startPanel");
+    const startBtn = document.getElementById("startBtn");
 
     const levelEnd = 2400;
-    const groundY = 360;
     const player = {
-      x: 45, y: groundY - 54, w: 38, h: 54,
+      x: 45, y: 306, w: 38, h: 54,
       vx: 0, vy: 0, onGround: true
     };
     const keys = { left: false, right: false };
 
     let cameraX = 0;
     let coins = 0;
-    let finished = false;
+    let gameStarted = false;
+    let gameFinished = false;
 
     const platforms = [
       { x: 0, y: 360, w: 400, h: 80 },
@@ -125,6 +187,13 @@
       { x: 1050, y: 280, w: 110, h: 18 },
       { x: 1510, y: 270, w: 110, h: 18 },
       { x: 1940, y: 280, w: 110, h: 18 }
+    ];
+
+    const enemies = [
+      { x: 690, y: 330, w: 28, h: 30, dir: 1, speed: 1.2 },
+      { x: 1180, y: 330, w: 28, h: 30, dir: -1, speed: 1.5 },
+      { x: 1690, y: 330, w: 28, h: 30, dir: 1, speed: 1.8 },
+      { x: 2070, y: 330, w: 28, h: 30, dir: -1, speed: 2.1 }
     ];
 
     const treasures = [
@@ -148,31 +217,44 @@
     }
 
     function jump() {
-      if (player.onGround && !finished) {
-        player.vy = -12;
+      if (!gameStarted || gameFinished) return;
+      if (player.onGround) {
+        player.vy = -14;
         player.onGround = false;
       }
     }
 
     function reset() {
       player.x = 45;
-      player.y = groundY - player.h;
+      player.y = 306;
       player.vx = 0;
       player.vy = 0;
       player.onGround = true;
       cameraX = 0;
       coins = 0;
-      finished = false;
+      gameFinished = false;
+
+      enemies.forEach(enemy => {
+        enemy.x = [690, 1180, 1690, 2070][enemies.indexOf(enemy)];
+        enemy.dir = enemies.indexOf(enemy) % 2 === 0 ? 1 : -1;
+      });
+
       treasures.forEach(coin => coin.got = false);
       coinsDisplay.textContent = coins;
-      message.textContent =
-        "Use ← → and Space, or the buttons below. Jump over the gaps!";
+      message.textContent = "Collect coins. Avoid enemies. Reach the flag!";
+    }
+
+    function startGame() {
+      gameStarted = true;
+      startPanel.style.display = "none";
+      reset();
+      message.textContent = "Go! Dodge the enemies and grab the coins!";
     }
 
     function update() {
-      if (finished) return;
+      if (!gameStarted || gameFinished) return;
 
-      player.vx = (keys.right ? 4 : 0) - (keys.left ? 4 : 0);
+      player.vx = (keys.right ? 7 : 0) - (keys.left ? 7 : 0);
       player.x += player.vx;
       player.x = Math.max(0, Math.min(levelEnd - player.w, player.x));
 
@@ -196,6 +278,24 @@
         }
       }
 
+      for (const enemy of enemies) {
+        enemy.x += enemy.speed * enemy.dir;
+
+        if (enemy.x < 620 || enemy.x > 2230) {
+          enemy.dir *= -1;
+        }
+
+        if (overlaps(player, enemy)) {
+          message.textContent = "You got bonked by an enemy! Try again!";
+          reset();
+          startPanel.style.display = "grid";
+          startPanel.querySelector("h2").textContent = "Try again!";
+          startPanel.querySelector("p").textContent = "Enemies are not friendly. Hit play and go again.";
+          gameStarted = false;
+          return;
+        }
+      }
+
       for (const coin of treasures) {
         if (!coin.got && overlaps(player, {
           x: coin.x, y: coin.y, w: 22, h: 22
@@ -206,19 +306,19 @@
         }
       }
 
-      if (player.y > canvas.height + 80) {
-        player.x = 45;
-        player.y = groundY - player.h;
-        player.vx = 0;
-        player.vy = 0;
-        player.onGround = true;
-        cameraX = 0;
-        message.textContent = "Whoops! Back to the start—try again!";
+      if (player.y > canvas.height + 90) {
+        message.textContent = "You fell in the gap! Try again!";
+        reset();
+        startPanel.style.display = "grid";
+        startPanel.querySelector("h2").textContent = "Retry";
+        startPanel.querySelector("p").textContent = "The gap wins sometimes. Hit play and go again.";
+        gameStarted = false;
+        return;
       }
 
       if (player.x > levelEnd - 95) {
-        finished = true;
-        message.textContent = `You made it! You collected ${coins} coins! 🎉`;
+        gameFinished = true;
+        message.textContent = `You did it! You collected ${coins} coins! 🎉`;
       }
 
       cameraX = Math.max(
@@ -231,22 +331,18 @@
       const x = player.x - cameraX;
       const y = player.y;
 
-      // Shadow
-      ctx.fillStyle = "rgba(0, 0, 0, 0.18)";
+      ctx.fillStyle = "rgba(0,0,0,0.18)";
       ctx.fillRect(x + 5, y + player.h + 3, 28, 5);
 
-      // Shoes and legs
       ctx.fillStyle = "#8b542e";
       ctx.fillRect(x + 4, y + 48, 14, 7);
       ctx.fillRect(x + 21, y + 48, 14, 7);
 
-      // Blue overalls
       ctx.fillStyle = "#3978e8";
       ctx.fillRect(x + 7, y + 29, 24, 20);
       ctx.fillRect(x + 10, y + 24, 6, 15);
       ctx.fillRect(x + 22, y + 24, 6, 15);
 
-      // Shirt and arms
       ctx.fillStyle = "#f4e9d4";
       ctx.fillRect(x + 8, y + 20, 22, 14);
 
@@ -254,49 +350,56 @@
       ctx.fillRect(x + 2, y + 25, 7, 13);
       ctx.fillRect(x + 29, y + 25, 7, 13);
 
-      // Face
       ctx.fillStyle = "#f2bd91";
       ctx.fillRect(x + 9, y + 11, 21, 20);
 
-      // Ears
       ctx.fillRect(x + 6, y + 18, 4, 7);
       ctx.fillRect(x + 29, y + 18, 4, 7);
 
-      // Cap
       ctx.fillStyle = "#d84b58";
       ctx.fillRect(x + 7, y + 4, 24, 10);
       ctx.fillRect(x + 3, y + 11, 32, 5);
+
       ctx.fillStyle = "#f5f0e8";
       ctx.fillRect(x + 17, y + 7, 5, 4);
 
-      // Eyes
       ctx.fillStyle = "#28243a";
       ctx.fillRect(x + 14, y + 18, 3, 4);
       ctx.fillRect(x + 24, y + 18, 3, 4);
 
-      // Big silly moustache
       ctx.fillStyle = "#49332d";
       ctx.fillRect(x + 11, y + 23, 8, 5);
       ctx.fillRect(x + 20, y + 23, 8, 5);
       ctx.fillRect(x + 16, y + 25, 7, 4);
 
-      // Overall buttons
       ctx.fillStyle = "#ffe477";
       ctx.fillRect(x + 12, y + 32, 3, 3);
       ctx.fillRect(x + 23, y + 32, 3, 3);
     }
 
+    function drawEnemy(enemy) {
+      const x = enemy.x - cameraX;
+      const y = enemy.y;
+
+      ctx.fillStyle = "#2d2d35";
+      ctx.fillRect(x, y, enemy.w, enemy.h);
+
+      ctx.fillStyle = "#ed5b4a";
+      ctx.fillRect(x + 4, y + 4, enemy.w - 8, 8);
+      ctx.fillStyle = "#f7f8ff";
+      ctx.fillRect(x + 8, y + 15, 4, 4);
+      ctx.fillRect(x + enemy.w - 12, y + 15, 4, 4);
+    }
+
     function draw() {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      // Sun
       ctx.fillStyle = "#fff6b8";
       ctx.beginPath();
       ctx.arc(700 - cameraX * 0.15, 75, 35, 0, Math.PI * 2);
       ctx.fill();
 
-      // Clouds
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = "#ffffff";
       for (const cloud of [
         { x: 130, y: 85 },
         { x: 460, y: 130 },
@@ -310,7 +413,6 @@
         ctx.fill();
       }
 
-      // Platforms
       for (const platform of platforms) {
         const x = platform.x - cameraX;
         if (x + platform.w < 0 || x > canvas.width) continue;
@@ -321,7 +423,6 @@
         ctx.fillRect(x, platform.y + 12, platform.w, platform.h - 12);
       }
 
-      // Coins
       for (const coin of treasures) {
         if (coin.got) continue;
         const x = coin.x - cameraX;
@@ -335,7 +436,10 @@
         ctx.fillRect(x + 9, coin.y + 5, 4, 12);
       }
 
-      // Finish flag
+      for (const enemy of enemies) {
+        drawEnemy(enemy);
+      }
+
       const flagX = levelEnd - 85 - cameraX;
       ctx.fillStyle = "#564b74";
       ctx.fillRect(flagX, 250, 7, 110);
@@ -399,8 +503,16 @@
     holdButton("left", "left");
     holdButton("right", "right");
     holdButton("jump", "jump");
-    document.getElementById("restart").addEventListener("click", reset);
+    document.getElementById("restart").addEventListener("click", () => {
+      startPanel.style.display = "grid";
+      startPanel.querySelector("h2").textContent = "Jump!";
+      startPanel.querySelector("p").textContent = "Collect coins, dodge enemies, and reach the flag.";
+      gameStarted = false;
+      reset();
+    });
+    startBtn.addEventListener("click", startGame);
 
+    reset();
     loop();
   </script>
 </body>
