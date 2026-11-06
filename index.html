@@ -7,55 +7,55 @@
 <style>
   * { box-sizing: border-box; }
   html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
-  body { background: #83d8ff; font-family: system-ui, sans-serif; color: white; }
-  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  body { background: #79cfff; color: white; font-family: system-ui, sans-serif; }
+  canvas { position: fixed; inset: 0; display: block; width: 100%; height: 100%; }
+
   #hud {
     position: fixed; z-index: 2; top: max(12px, env(safe-area-inset-top));
-    left: 16px; right: 16px; display: flex; justify-content: space-between;
-    align-items: flex-start; gap: 8px; pointer-events: none;
-    text-shadow: 0 2px 4px #26314d;
+    left: 12px; right: 12px; display: flex; justify-content: space-between;
+    align-items: flex-start; gap: 7px; pointer-events: none;
+    text-shadow: 0 2px 4px #17213d;
   }
-  .badge {
-    padding: 8px 12px; border: 1px solid #ffffff70; border-radius: 14px;
-    background: #17243caa; font-weight: 800; font-size: clamp(13px, 3.5vw, 18px);
+  .badge, #language, #music {
+    border: 1px solid #ffffff80; border-radius: 14px; padding: 8px 11px;
+    color: white; background: #17243cbd; font: 800 clamp(12px, 3.4vw, 17px) system-ui, sans-serif;
   }
-  #music {
-    pointer-events: auto; border: 1px solid #ffffff70; cursor: pointer;
-    color: white; background: #17243caa; border-radius: 14px;
-    padding: 8px 12px; font: inherit; font-weight: 800;
-  }
+  #language, #music { pointer-events: auto; cursor: pointer; }
+
   #controls {
     position: fixed; z-index: 3; left: 0; right: 0;
-    bottom: max(18px, env(safe-area-inset-bottom));
-    display: flex; justify-content: space-between; padding: 0 20px;
-    pointer-events: none;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    display: flex; justify-content: space-between; align-items: end;
+    padding: 0 16px; pointer-events: none;
   }
-  .control-group { display: flex; gap: 12px; }
+  .group { display: flex; gap: 10px; }
   .control {
-    pointer-events: auto; width: clamp(62px, 17vw, 82px);
-    height: clamp(62px, 17vw, 82px); border: 2px solid #ffffffa8;
-    border-radius: 22px; background: #222b55bb; color: white;
-    font-size: 30px; font-weight: 900; box-shadow: 0 5px 0 #11193699;
+    pointer-events: auto; width: clamp(56px, 16vw, 78px);
+    height: clamp(56px, 16vw, 78px); border: 2px solid #ffffffbb;
+    border-radius: 20px; color: white; background: #30346dcc;
+    font-size: 28px; font-weight: 900; box-shadow: 0 5px 0 #161a4599;
     touch-action: none; user-select: none;
   }
-  .control:active { transform: translateY(3px); box-shadow: 0 2px 0 #11193699; }
-  #jump { background: #ed5592dd; }
+  #jump { background: #e95491e8; }
+  #action { background: #35a878e8; font-size: 21px; }
+  .control:active { transform: translateY(3px); }
+
   #screen {
-    position: fixed; z-index: 5; inset: 0; display: grid; place-items: center;
-    padding: 24px; background: #10172a55;
+    position: fixed; z-index: 5; inset: 0; display: grid;
+    place-items: center; padding: 22px; background: #11172c66;
   }
   #card {
-    width: min(440px, 100%); padding: 28px 22px; text-align: center;
-    color: #252846; border: 3px solid white; border-radius: 28px;
+    width: min(440px, 100%); padding: 26px 22px; text-align: center;
+    color: #242744; border: 3px solid white; border-radius: 26px;
     background: linear-gradient(145deg, #fff8df, #ffe2ef);
     box-shadow: 0 18px 60px #10172a66;
   }
-  #card h1 { margin: 0 0 10px; font-size: clamp(32px, 9vw, 54px); line-height: 1; }
+  #card h1 { margin: 0 0 12px; font-size: clamp(34px, 9vw, 52px); line-height: 1; }
   #card p { font-size: 17px; line-height: 1.45; }
   #play {
-    border: 0; border-radius: 16px; padding: 14px 28px; color: white;
-    background: linear-gradient(#ff8c43, #ed4e78);
-    font-size: 20px; font-weight: 900; box-shadow: 0 5px 0 #bc3d63;
+    border: 0; border-radius: 16px; padding: 14px 26px; color: white;
+    background: linear-gradient(#ff9147, #e94e82); font-size: 20px;
+    font-weight: 900; box-shadow: 0 5px 0 #ba3f68;
   }
   #note { font-size: 12px !important; color: #65677a; margin-bottom: 0; }
   .hidden { display: none !important; }
@@ -66,24 +66,28 @@
 
 <div id="hud">
   <div class="badge">🪙 <span id="coins">0</span> &nbsp; 💛 <span id="lives">3</span></div>
-  <div class="badge">⭐ Best: <span id="best">0</span></div>
-  <button id="music" aria-label="Toggle music">♫ Music on</button>
+  <div class="badge" id="levelLabel">Level 1</div>
+  <button id="language" aria-label="Change language">ES</button>
+  <button id="music" aria-label="Toggle music">♫</button>
 </div>
 
 <div id="controls">
-  <div class="control-group">
+  <div class="group">
     <button class="control" id="left" aria-label="Move left">◀</button>
     <button class="control" id="right" aria-label="Move right">▶</button>
   </div>
-  <button class="control" id="jump" aria-label="Jump">⬆</button>
+  <div class="group">
+    <button class="control" id="action" aria-label="Enter pipe">⬇</button>
+    <button class="control" id="jump" aria-label="Jump">⬆</button>
+  </div>
 </div>
 
 <div id="screen">
   <div id="card">
     <h1 id="title">🛍️ Super Temu Bros</h1>
-    <p id="description">Dash through the bargain kingdom, grab shiny coins, dodge the grumpy parcels, and reach the checkout flag!</p>
+    <p id="description">Run, jump, collect coins, dodge the grumpy parcels, and travel through pipes to explore three worlds!</p>
     <button id="play">Start playing!</button>
-    <p id="note">An original fan-made platform game. Not affiliated with Nintendo or Temu.</p>
+    <p id="note">An original fan-made platform game with original art and music.</p>
   </div>
 </div>
 
@@ -92,315 +96,367 @@
   const canvas = document.querySelector("#game");
   const ctx = canvas.getContext("2d");
   const $ = id => document.getElementById(id);
-  let W = innerWidth, H = innerHeight, dpr = 1;
-  let groundY = H - 92, camera = 0, lastTime = 0;
-  let running = false, ended = false, won = false;
-  let coins = 0, lives = 3;
-  const worldEnd = 3900;
-  const keys = { left: false, right: false };
+  let W = innerWidth, H = innerHeight, dpr = 1, groundY = H - 100;
+  let camera = 0, lastTime = 0, running = false, language = "en";
+  let coins = 0, lives = 3, levelIndex = 0;
   let audio, musicTimer, musicOn = true, noteIndex = 0;
+  const keys = { left: false, right: false };
+  const player = { x: 65, y: 0, w: 36, h: 48, vx: 0, vy: 0, grounded: false, invuln: 0 };
 
-  const player = { x: 70, y: 0, w: 36, h: 48, vx: 0, vy: 0, grounded: false, invuln: 0 };
-  const groundParts = [[0,520],[650,1170],[1300,1840],[1970,2540],[2670,3250],[3380,3900]];
-  const ledges = [
-    {x:270,w:125,h:125},{x:780,w:120,h:150},{x:1050,w:110,h:100},
-    {x:1460,w:135,h:145},{x:2140,w:120,h:110},{x:2390,w:130,h:155},
-    {x:2860,w:125,h:120},{x:3100,w:130,h:170},{x:3510,w:140,h:130}
+  const text = {
+    en: {
+      intro: "Run, jump, collect coins, dodge the grumpy parcels, and travel through pipes to explore three worlds!",
+      start: "Start playing!", restart: "Play again",
+      failTitle: "📦 Oops!", winTitle: "🏆 You did it!",
+      fail: "You ran out of lives! Your friends are waiting for a rematch.",
+      win: "You conquered all three worlds! What a legendary shopping trip!",
+      level: n => ["Sunny Sale Hills", "Bubblewrap Bay", "Midnight Market"][n],
+      pipe: "Stand by the big green pipe and press ⬇ to travel!",
+      coins: "Coins", lives: "Lives",
+      help: "Move with ◀ ▶ · Jump with ⬆ · Enter a pipe with ⬇",
+      musicOn: "♫", musicOff: "♫×"
+    },
+    es: {
+      intro: "¡Corre, salta, recoge monedas, esquiva los paquetes gruñones y viaja por tuberías para explorar tres mundos!",
+      start: "¡A jugar!", restart: "Jugar de nuevo",
+      failTitle: "📦 ¡Ups!", winTitle: "🏆 ¡Lo lograste!",
+      fail: "¡Te quedaste sin vidas! Tus amigos esperan la revancha.",
+      win: "¡Conquistaste los tres mundos! ¡Qué viaje de compras legendario!",
+      level: n => ["Colinas de ofertas", "Bahía de burbujas", "Mercado nocturno"][n],
+      pipe: "¡Párate junto a la tubería verde y pulsa ⬇ para viajar!",
+      coins: "Monedas", lives: "Vidas",
+      help: "Mover ◀ ▶ · Saltar ⬆ · Entrar en tubería ⬇",
+      musicOn: "♫", musicOff: "♫×"
+    }
+  };
+
+  const themes = [
+    { sky1:"#5dc8ff", sky2:"#d6f7ff", hill:"#65c88b", ground:"#986044", grass:"#44bd72", pipe:"#2cb75d", accent:"#ffe27a" },
+    { sky1:"#51b8d5", sky2:"#c8f4ec", hill:"#47aa9b", ground:"#8b5949", grass:"#42b89c", pipe:"#287f8e", accent:"#ffdc73" },
+    { sky1:"#343b77", sky2:"#a8a2e8", hill:"#5555a0", ground:"#634c72", grass:"#6fbe86", pipe:"#59a86a", accent:"#fff0a0" }
   ];
-  const coinSpots = [
-    [310,groundY-190],[390,groundY-70],[620,groundY-85],[820,groundY-205],
-    [1110,groundY-155],[1260,groundY-75],[1500,groundY-205],[1760,groundY-75],
-    [2180,groundY-170],[2440,groundY-215],[2600,groundY-80],
-    [2890,groundY-180],[3150,groundY-230],[3300,groundY-75],[3540,groundY-195]
+
+  const levels = [
+    {
+      length: 2050, gaps:[[440,535],[900,1000],[1435,1540]],
+      ledges:[[250,105,78],[690,115,92],[1100,110,80],[1600,120,95]],
+      coins:[[295,140],[385,68],[735,160],[850,70],[1140,145],[1370,70],[1640,165],[1810,75]],
+      enemies:[[600,45,115,65],[1030,40,100,75],[1535,45,100,85],[1790,40,95,90]],
+      pipeAt:1810
+    },
+    {
+      length: 2250, gaps:[[390,485],[850,950],[1320,1425],[1770,1870]],
+      ledges:[[220,115,85],[575,100,75],[1000,120,90],[1485,105,78],[1920,115,85]],
+      coins:[[260,165],[350,75],[615,145],[800,75],[1040,165],[1260,75],[1520,150],[1715,75],[1955,160],[2110,75]],
+      enemies:[[520,40,100,75],[960,45,100,80],[1435,40,100,90],[1880,40,100,95]],
+      pipeAt:2010
+    },
+    {
+      length:2450, gaps:[[460,565],[960,1065],[1510,1615],[2020,2120]],
+      ledges:[[260,105,78],[680,120,90],[1130,110,82],[1690,125,95],[2180,110,82]],
+      coins:[[300,150],[420,70],[715,170],[900,75],[1165,155],[1450,75],[1735,180],[1950,75],[2220,165],[2350,75]],
+      enemies:[[590,45,110,80],[1080,45,110,85],[1630,45,110,90],[2130,45,110,100]],
+      pipeAt:2210
+    }
   ];
-  let coinsWorld = [];
-  let enemies = [];
+
+  let pickups = [], enemies = [];
+
+  function tr(key, ...args) {
+    const value = text[language][key];
+    return typeof value === "function" ? value(...args) : value;
+  }
+
+  function currentLevel() { return levels[levelIndex]; }
 
   function resize() {
     W = innerWidth; H = innerHeight; dpr = Math.min(devicePixelRatio || 1, 2);
-    canvas.width = Math.round(W * dpr); canvas.height = Math.round(H * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    groundY = H - (W < 600 ? 105 : 90);
-    if (!running) player.y = groundY - player.h;
-    coinsWorld = coinSpots.map(([x, offset]) => ({ x, y: groundY + (offset - (innerHeight - 92)), got: false }));
-    // Keep pickups at sensible heights when the screen size changes.
-    coinsWorld.forEach((c, i) => c.y = groundY - [190,70,85,205,155,75,205,75,170,215,80,180,230,75,195][i]);
+    canvas.width = Math.round(W*dpr); canvas.height = Math.round(H*dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    groundY = H - (W < 600 ? 108 : 88);
+    if (!running) player.y = groundY-player.h;
+    $("levelLabel").textContent = `${levelIndex+1} · ${tr("level",levelIndex)}`;
   }
   addEventListener("resize", resize);
 
-  function makeEnemies() {
-    enemies = [
-      {x:570, min:535, max:630, dir:1, speed:65, alive:true},
-      {x:1210,min:1180,max:1280,dir:-1,speed:80,alive:true},
-      {x:1880,min:1845,max:1950,dir:1,speed:90,alive:true},
-      {x:2570,min:2545,max:2650,dir:-1,speed:100,alive:true},
-      {x:3280,min:3255,max:3360,dir:1,speed:110,alive:true}
-    ];
-  }
-
-  function startMusic() {
-    if (!musicOn) return;
-    const AudioContext = window.AudioContext || window.webkitAudioContext;
-    if (!AudioContext) return;
-    audio ||= new AudioContext();
-    audio.resume();
-    clearInterval(musicTimer);
-    // Original playful chiptune phrase; not a recording or arrangement of a game soundtrack.
-    const melody = [523,659,784,659,587,698,880,698,523,659,784,1047,880,784,659,587];
-    musicTimer = setInterval(() => {
-      if (!audio || !musicOn) return;
-      const t = audio.currentTime;
-      const osc = audio.createOscillator(), gain = audio.createGain();
-      osc.type = "square";
-      osc.frequency.value = melody[noteIndex++ % melody.length];
-      gain.gain.setValueAtTime(0.035, t);
-      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.14);
-      osc.connect(gain); gain.connect(audio.destination);
-      osc.start(t); osc.stop(t + 0.15);
-    }, 175);
-  }
-
-  function resetGame() {
-    coins = 0; lives = 3; camera = 0; ended = false; won = false;
-    player.x = 70; player.y = groundY - player.h; player.vx = 0; player.vy = 0;
-    player.grounded = false; player.invuln = 0;
-    coinsWorld.forEach(c => c.got = false);
-    makeEnemies();
+  function setupLevel() {
+    const l=currentLevel();
+    pickups=l.coins.map(([x,height])=>({x,y:groundY-height,got:false}));
+    enemies=l.enemies.map(([x,offset,range,speed])=>({
+      x, min:x-offset, max:x+range, dir:1, speed, alive:true
+    }));
+    player.x=55; player.y=groundY-player.h; player.vx=0; player.vy=0;
+    player.grounded=false; camera=0;
     updateHud();
   }
 
   function updateHud() {
-    $("coins").textContent = coins;
-    $("lives").textContent = lives;
-    $("best").textContent = Number(localStorage.getItem("temuBest") || 0);
+    $("coins").textContent=coins;
+    $("lives").textContent=lives;
+    $("levelLabel").textContent=`${levelIndex+1} · ${tr("level",levelIndex)}`;
   }
 
   function startGame() {
-    resetGame();
-    running = true;
+    coins=0; lives=3; levelIndex=0;
+    setupLevel(); running=true;
     $("screen").classList.add("hidden");
-    startMusic();
-    lastTime = performance.now();
+    startMusic(); lastTime=performance.now();
   }
 
-  function showEnd(isWin) {
-    running = false; ended = true; won = isWin;
-    $("title").textContent = isWin ? "🏁 Checkout!" : "📦 Oops!";
-    $("description").textContent = isWin
-      ? `Level complete! You collected ${coins} coins. Nice shopping!`
-      : `Out of lives! You collected ${coins} coins. Give it another go!`;
-    $("play").textContent = "Play again";
+  function endGame(won) {
+    running=false;
+    $("title").textContent=won ? tr("winTitle") : tr("failTitle");
+    $("description").textContent=won ? tr("win") : tr("fail");
+    $("play").textContent=tr("restart");
     $("screen").classList.remove("hidden");
   }
 
+  function startMusic() {
+    if (!musicOn) return;
+    const AC=window.AudioContext||window.webkitAudioContext;
+    if (!AC) return;
+    audio ||= new AC(); audio.resume(); clearInterval(musicTimer);
+    const notes=[523,659,784,659,587,698,880,698,523,659,784,988,880,784,659,587];
+    musicTimer=setInterval(()=>{
+      if (!audio||!musicOn||!running) return;
+      const t=audio.currentTime, osc=audio.createOscillator(), gain=audio.createGain();
+      osc.type="square"; osc.frequency.value=notes[noteIndex++%notes.length];
+      gain.gain.setValueAtTime(.025,t); gain.gain.exponentialRampToValueAtTime(.001,t+.13);
+      osc.connect(gain); gain.connect(audio.destination); osc.start(t); osc.stop(t+.14);
+    },170);
+  }
+
   function jump() {
-    if (running && player.grounded) {
-      player.vy = -690;
-      player.grounded = false;
+    if (running&&player.grounded) { player.vy=-680; player.grounded=false; }
+  }
+
+  function enterPipe() {
+    if (!running || !player.grounded) return;
+    const pipeX=currentLevel().pipeAt;
+    if (Math.abs((player.x+player.w/2)-pipeX)>82) return;
+    if (levelIndex<levels.length-1) {
+      levelIndex++; setupLevel();
+    } else {
+      endGame(true);
     }
   }
 
-  function rectsHit(a, b) {
-    return a.x < b.x+b.w && a.x+a.w > b.x && a.y < b.y+b.h && a.y+a.h > b.y;
+  function hit(a,b) {
+    return a.x<b.x+b.w && a.x+a.w>b.x && a.y<b.y+b.h && a.y+a.h>b.y;
   }
 
   function hurt() {
-    if (player.invuln > 0) return;
-    lives--;
-    updateHud();
-    if (lives <= 0) { showEnd(false); return; }
-    player.x = Math.max(50, player.x - 150);
-    player.y = groundY - player.h - 10;
-    player.vy = -300;
-    player.invuln = 1.5;
+    if (player.invuln>0) return;
+    lives--; updateHud();
+    if (lives<=0) { endGame(false); return; }
+    player.x=Math.max(40,player.x-130);
+    player.y=groundY-player.h-8;
+    player.vy=-280; player.invuln=1.5;
   }
 
   function update(dt) {
     if (!running) return;
-    dt = Math.min(dt, 0.033);
-    player.invuln = Math.max(0, player.invuln - dt);
-    player.vx = ((keys.right ? 1 : 0) - (keys.left ? 1 : 0)) * 300;
-    player.x = Math.max(0, Math.min(worldEnd - player.w, player.x + player.vx * dt));
+    dt=Math.min(dt,.035);
+    player.invuln=Math.max(0,player.invuln-dt);
+    player.vx=((keys.right?1:0)-(keys.left?1:0))*300;
+    player.x=Math.max(0,Math.min(currentLevel().length-player.w,player.x+player.vx*dt));
 
-    const oldBottom = player.y + player.h;
-    player.vy += 1850 * dt;
-    player.y += player.vy * dt;
-    player.grounded = false;
+    const oldBottom=player.y+player.h;
+    player.vy+=1750*dt;
+    player.y+=player.vy*dt;
+    player.grounded=false;
 
-    const platforms = [
-      ...groundParts.map(([x, end]) => ({x, y:groundY, w:end-x, h:H-groundY+40})),
-      ...ledges.map(p => ({x:p.x, y:groundY-p.h, w:p.w, h:18}))
+    const platforms=[
+      ...currentLevel().ledges.map(([x,w,height])=>({x,y:groundY-height,w,h:14})),
+      ...currentLevel().gaps.flatMap(([a,b])=>[])
     ];
+
+    // Land on the ground except where the level has a gap.
+    const overGap=currentLevel().gaps.some(([a,b])=>player.x+player.w>a&&player.x<b);
+    if (!overGap && oldBottom<=groundY+3 && player.y+player.h>=groundY && player.vy>=0) {
+      player.y=groundY-player.h; player.vy=0; player.grounded=true;
+    }
     for (const p of platforms) {
-      const overlapsX = player.x + player.w > p.x && player.x < p.x + p.w;
-      if (overlapsX && oldBottom <= p.y + 3 && player.y + player.h >= p.y && player.vy >= 0) {
-        player.y = p.y - player.h;
-        player.vy = 0;
-        player.grounded = true;
+      if (player.x+player.w>p.x && player.x<p.x+p.w &&
+          oldBottom<=p.y+4 && player.y+player.h>=p.y && player.vy>=0) {
+        player.y=p.y-player.h; player.vy=0; player.grounded=true;
       }
     }
 
-    for (const c of coinsWorld) {
-      if (!c.got && rectsHit(player, {x:c.x-11,y:c.y-11,w:22,h:22})) {
-        c.got = true; coins++;
-        const best = Math.max(coins, Number(localStorage.getItem("temuBest") || 0));
-        localStorage.setItem("temuBest", best);
-        updateHud();
+    for (const c of pickups) {
+      if (!c.got&&hit(player,{x:c.x-11,y:c.y-12,w:22,h:24})) {
+        c.got=true; coins++; updateHud();
       }
     }
 
     for (const e of enemies) {
       if (!e.alive) continue;
-      e.x += e.dir * e.speed * dt;
-      if (e.x < e.min || e.x > e.max) e.dir *= -1;
-      const enemy = {x:e.x,y:groundY-31,w:34,h:31};
-      if (rectsHit(player, enemy)) {
-        if (player.vy > 100 && oldBottom < enemy.y + 15) {
-          e.alive = false; player.vy = -440;
-        } else hurt();
+      e.x+=e.dir*e.speed*dt;
+      if (e.x<e.min||e.x>e.max) e.dir*=-1;
+      const box={x:e.x,y:groundY-31,w:34,h:31};
+      if (hit(player,box)) {
+        if (player.vy>100&&oldBottom<box.y+14) { e.alive=false; player.vy=-390; }
+        else hurt();
       }
     }
 
-    if (player.y > H + 100) hurt();
-    if (player.x > worldEnd - 130) showEnd(true);
-    camera = Math.max(0, Math.min(worldEnd - W, player.x - W * 0.36));
+    if (player.y>H+90) hurt();
+    const pipeX=currentLevel().pipeAt;
+    if (Math.abs(player.x+player.w/2-pipeX)<95 && player.grounded) {
+      $("levelLabel").textContent=`${levelIndex+1} · ${tr("level",levelIndex)} · ⬇`;
+    } else {
+      $("levelLabel").textContent=`${levelIndex+1} · ${tr("level",levelIndex)}`;
+    }
+    camera=Math.max(0,Math.min(currentLevel().length-W,player.x-W*.36));
   }
 
-  function drawBackground() {
-    const sky = ctx.createLinearGradient(0, 0, 0, H);
-    sky.addColorStop(0, "#62c8ff"); sky.addColorStop(1, "#d5f5ff");
-    ctx.fillStyle = sky; ctx.fillRect(0,0,W,H);
+  function drawBackground(theme) {
+    const sky=ctx.createLinearGradient(0,0,0,H);
+    sky.addColorStop(0,theme.sky1); sky.addColorStop(1,theme.sky2);
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
 
-    // Distant hills
-    for (let i=0;i<8;i++) {
-      const x = i*330 - (camera*0.2 % 330);
-      ctx.fillStyle = i%2 ? "#79d6a0" : "#62c992";
-      ctx.beginPath(); ctx.ellipse(x+130,groundY+5,175,105,0,Math.PI,Math.PI*2); ctx.fill();
+    for(let i=0;i<9;i++) {
+      const x=i*310-(camera*.18%310);
+      ctx.fillStyle=theme.hill; ctx.beginPath();
+      ctx.ellipse(x+130,groundY+8,170,95,0,Math.PI,Math.PI*2); ctx.fill();
     }
-    // Puffy clouds
-    for (let i=0;i<7;i++) {
-      const x = ((i*270 - camera*0.12) % (W+280) + W+280) % (W+280) - 100;
-      const y = 90 + (i%3)*55;
-      ctx.fillStyle = "#ffffffd9";
-      ctx.beginPath(); ctx.arc(x,y,25,0,Math.PI*2); ctx.arc(x+30,y-12,32,0,Math.PI*2);
-      ctx.arc(x+61,y,24,0,Math.PI*2); ctx.fill();
+    for(let i=0;i<7;i++) {
+      const x=((i*270-camera*.12)%(W+280)+W+280)%(W+280)-100;
+      const y=76+(i%3)*48;
+      ctx.fillStyle="#ffffffd9"; ctx.beginPath();
+      ctx.arc(x,y,23,0,Math.PI*2); ctx.arc(x+29,y-12,31,0,Math.PI*2);
+      ctx.arc(x+60,y,23,0,Math.PI*2); ctx.fill();
     }
   }
 
-  function drawWorld() {
-    drawBackground();
+  function drawPipe(x,theme,active) {
+    const sx=x-camera, y=groundY-63;
+    ctx.fillStyle=theme.pipe; ctx.fillRect(sx+7,y+10,52,53);
+    ctx.fillRect(sx,y,66,19);
+    ctx.fillStyle="#ffffff40"; ctx.fillRect(sx+7,y+3,10,12);
+    ctx.fillStyle="#00000022"; ctx.fillRect(sx+54,y+4,8,55);
+    if(active) {
+      ctx.fillStyle="#fff"; ctx.font="bold 15px system-ui"; ctx.textAlign="center";
+      ctx.fillText("⬇",sx+33,y-8); ctx.textAlign="left";
+    }
+  }
 
-    for (const [start,end] of groundParts) {
-      const x = start-camera;
-      if (x > W || x+end-start < 0) continue;
-      ctx.fillStyle = "#48bd73"; ctx.fillRect(x,groundY,end-start,14);
-      ctx.fillStyle = "#995d42"; ctx.fillRect(x,groundY+14,end-start,H-groundY);
-      ctx.fillStyle = "#b87950";
-      for (let bx=x+20; bx<x+end-start; bx+=58) {
-        ctx.fillRect(bx,groundY+34,28,5);
-      }
+  function drawPlayer() {
+    if(player.invuln>0&&Math.floor(player.invuln*12)%2===0) return;
+    const x=player.x-camera,y=player.y;
+    // Original delivery-runner hero, not a copied game sprite.
+    ctx.fillStyle="#173d4d"; ctx.fillRect(x+5,y+42,12,6); ctx.fillRect(x+21,y+42,12,6);
+    ctx.fillStyle="#f07a3d"; ctx.fillRect(x+6,y+8,25,9); ctx.fillRect(x+2,y+14,32,5);
+    ctx.fillStyle="#f3bd8e"; ctx.fillRect(x+8,y+16,22,18);
+    ctx.fillStyle="#293449"; ctx.fillRect(x+14,y+22,3,4); ctx.fillRect(x+24,y+22,3,4);
+    ctx.fillStyle="#70443c"; ctx.fillRect(x+14,y+29,12,3);
+    ctx.fillStyle="#138b91"; ctx.fillRect(x+5,y+33,27,13);
+    ctx.fillStyle="#ffd451"; ctx.fillRect(x+27,y+34,9,12);
+    ctx.fillStyle="#fff0a3"; ctx.fillRect(x+29,y+36,5,3);
+    ctx.fillStyle="#f3bd8e"; ctx.fillRect(x+1,y+34,6,11);
+  }
+
+  function draw() {
+    const theme=themes[levelIndex];
+    drawBackground(theme);
+
+    for(const [a,b] of currentLevel().gaps) {
+      // Ground is drawn as sections around each gap.
+    }
+    let cursor=0;
+    for(const [a,b] of currentLevel().gaps) {
+      drawGround(cursor,a,theme); cursor=b;
+    }
+    drawGround(cursor,currentLevel().length,theme);
+
+    for(const [x,w,height] of currentLevel().ledges) {
+      const sx=x-camera,y=groundY-height;
+      ctx.fillStyle=theme.grass; ctx.fillRect(sx,y,w,11);
+      ctx.fillStyle=theme.ground; ctx.fillRect(sx,y+11,w,8);
+      ctx.fillStyle="#ffffff55"; ctx.fillRect(sx+5,y+3,w-10,3);
     }
 
-    for (const p of ledges) {
-      const x=p.x-camera, y=groundY-p.h;
-      ctx.fillStyle="#49bd70"; ctx.fillRect(x,y,p.w,12);
-      ctx.fillStyle="#9b6244"; ctx.fillRect(x,y+12,p.w,8);
-      ctx.fillStyle="#ffffff55"; ctx.fillRect(x+5,y+3,p.w-10,3);
-    }
-
-    // Coins
-    for (const c of coinsWorld) {
-      if (c.got) continue;
+    for(const c of pickups) {
+      if(c.got) continue;
       const x=c.x-camera;
-      ctx.fillStyle="#ffc928"; ctx.beginPath(); ctx.ellipse(x,c.y,10,14,0,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle="#fff3a7"; ctx.fillRect(x-2,c.y-8,4,16);
+      ctx.fillStyle=theme.accent; ctx.beginPath();
+      ctx.ellipse(x,c.y,10,14,0,0,Math.PI*2); ctx.fill();
+      ctx.fillStyle="#fff7c0"; ctx.fillRect(x-2,c.y-8,4,16);
     }
 
-    // Silly grumpy parcel enemies
-    for (const e of enemies) {
-      if (!e.alive) continue;
-      const x=e.x-camera, y=groundY-31;
+    for(const e of enemies) {
+      if(!e.alive) continue;
+      const x=e.x-camera,y=groundY-31;
       ctx.fillStyle="#8d5be8"; ctx.fillRect(x,y+5,34,26);
       ctx.fillStyle="#f5bc57"; ctx.fillRect(x+5,y,24,8);
       ctx.fillStyle="#fff"; ctx.fillRect(x+7,y+12,6,6); ctx.fillRect(x+21,y+12,6,6);
       ctx.fillStyle="#33234b"; ctx.fillRect(x+9,y+14,3,4); ctx.fillRect(x+23,y+14,3,4);
-      ctx.fillStyle="#443050"; ctx.fillRect(x+12,y+23,10,3);
       ctx.fillStyle="#7043bf"; ctx.fillRect(x+3,y+29,11,4); ctx.fillRect(x+21,y+29,11,4);
     }
 
-    // Checkout flag
-    const fx=worldEnd-100-camera;
-    ctx.fillStyle="#514b75"; ctx.fillRect(fx,groundY-130,7,130);
-    ctx.fillStyle="#ff5c8a"; ctx.beginPath(); ctx.moveTo(fx+7,groundY-128);
-    ctx.lineTo(fx+75,groundY-106); ctx.lineTo(fx+7,groundY-83); ctx.fill();
-    ctx.fillStyle="#fff"; ctx.font="bold 14px system-ui"; ctx.fillText("SALE!",fx+13,groundY-102);
-
+    drawPipe(currentLevel().pipeAt,theme,true);
     drawPlayer();
   }
 
-  function drawPlayer() {
-    if (player.invuln > 0 && Math.floor(player.invuln*12)%2===0) return;
-    const x=player.x-camera, y=player.y;
-    // Original parcel-runner hero: teal jacket, orange cap, yellow delivery bag.
-    ctx.fillStyle="#193c4e"; ctx.fillRect(x+5,y+42,12,6); ctx.fillRect(x+21,y+42,12,6);
-    ctx.fillStyle="#ee7b3d"; ctx.fillRect(x+6,y+9,25,8); ctx.fillRect(x+2,y+15,32,5);
-    ctx.fillStyle="#f5bd8b"; ctx.fillRect(x+8,y+16,22,18);
-    ctx.fillStyle="#293449"; ctx.fillRect(x+14,y+22,3,4); ctx.fillRect(x+24,y+22,3,4);
-    ctx.fillStyle="#6a3d37"; ctx.fillRect(x+14,y+29,12,3);
-    ctx.fillStyle="#168b91"; ctx.fillRect(x+5,y+33,27,13);
-    ctx.fillStyle="#ffd451"; ctx.fillRect(x+27,y+34,9,12);
-    ctx.fillStyle="#fff0a3"; ctx.fillRect(x+29,y+36,5,3);
-    ctx.fillStyle="#f5bd8b"; ctx.fillRect(x+1,y+34,6,11);
-    ctx.fillStyle="#27344c"; ctx.fillRect(x+5,y+46,13,3); ctx.fillRect(x+20,y+46,13,3);
+  function drawGround(start,end,theme) {
+    const x=start-camera,w=end-start;
+    if(x>W||x+w<0) return;
+    ctx.fillStyle=theme.grass; ctx.fillRect(x,groundY,w,14);
+    ctx.fillStyle=theme.ground; ctx.fillRect(x,groundY+14,w,H-groundY);
+    ctx.fillStyle="#ffffff20";
+    for(let bx=x+18;bx<x+w;bx+=58) ctx.fillRect(bx,groundY+36,27,4);
   }
 
   function frame(now) {
-    const dt=(now-lastTime)/1000 || 0;
-    lastTime=now;
-    update(dt);
-    drawWorld();
-    requestAnimationFrame(frame);
+    const dt=(now-lastTime)/1000||0; lastTime=now;
+    update(dt); draw(); requestAnimationFrame(frame);
   }
 
-  $("play").addEventListener("click", startGame);
-  $("music").addEventListener("click", () => {
-    musicOn = !musicOn;
-    $("music").textContent = musicOn ? "♫ Music on" : "♫ Music off";
-    if (musicOn) startMusic(); else clearInterval(musicTimer);
+  $("play").addEventListener("click",startGame);
+  $("language").addEventListener("click",()=>{
+    language=language==="en"?"es":"en";
+    $("language").textContent=language==="en"?"ES":"EN";
+    $("description").textContent=tr("intro");
+    $("play").textContent=tr("start");
+    $("levelLabel").textContent=`${levelIndex+1} · ${tr("level",levelIndex)}`;
+  });
+  $("music").addEventListener("click",()=>{
+    musicOn=!musicOn; $("music").textContent=musicOn?tr("musicOn"):tr("musicOff");
+    if(musicOn) startMusic(); else clearInterval(musicTimer);
   });
 
-  function bindHold(id, key) {
-    const btn=$(id);
-    btn.addEventListener("pointerdown", e => {
+  function bindHold(id,key) {
+    const button=$(id);
+    button.addEventListener("pointerdown",e=>{
       e.preventDefault();
-      if (key === "jump") jump(); else keys[key]=true;
-      btn.setPointerCapture?.(e.pointerId);
+      if(key==="jump") jump();
+      else if(key==="action") enterPipe();
+      else keys[key]=true;
+      button.setPointerCapture?.(e.pointerId);
     });
-    const release=() => { if (key !== "jump") keys[key]=false; };
-    btn.addEventListener("pointerup",release);
-    btn.addEventListener("pointercancel",release);
-    btn.addEventListener("lostpointercapture",release);
+    const release=()=>{ if(key!=="jump"&&key!=="action") keys[key]=false; };
+    button.addEventListener("pointerup",release);
+    button.addEventListener("pointercancel",release);
+    button.addEventListener("lostpointercapture",release);
   }
-  bindHold("left","left"); bindHold("right","right"); bindHold("jump","jump");
+  bindHold("left","left"); bindHold("right","right");
+  bindHold("jump","jump"); bindHold("action","action");
 
-  addEventListener("keydown", e => {
-    if (["ArrowLeft","ArrowRight","ArrowUp"," "].includes(e.key)) e.preventDefault();
-    if (e.key==="ArrowLeft" || e.key.toLowerCase()==="a") keys.left=true;
-    if (e.key==="ArrowRight" || e.key.toLowerCase()==="d") keys.right=true;
-    if (e.key==="ArrowUp" || e.key===" ") jump();
+  addEventListener("keydown",e=>{
+    if(["ArrowLeft","ArrowRight","ArrowUp","ArrowDown"," "].includes(e.key)) e.preventDefault();
+    if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a") keys.left=true;
+    if(e.key==="ArrowRight"||e.key.toLowerCase()==="d") keys.right=true;
+    if(e.key==="ArrowUp"||e.key===" ") jump();
+    if(e.key==="ArrowDown"||e.key.toLowerCase()==="s") enterPipe();
   });
-  addEventListener("keyup", e => {
-    if (e.key==="ArrowLeft" || e.key.toLowerCase()==="a") keys.left=false;
-    if (e.key==="ArrowRight" || e.key.toLowerCase()==="d") keys.right=false;
+  addEventListener("keyup",e=>{
+    if(e.key==="ArrowLeft"||e.key.toLowerCase()==="a") keys.left=false;
+    if(e.key==="ArrowRight"||e.key.toLowerCase()==="d") keys.right=false;
   });
-  addEventListener("blur", () => { keys.left=false; keys.right=false; });
+  addEventListener("blur",()=>{keys.left=false;keys.right=false;});
 
-  resize();
-  makeEnemies();
-  updateHud();
-  requestAnimationFrame(frame);
+  resize(); setupLevel(); requestAnimationFrame(frame);
 })();
 </script>
 </body>
 </html>
-```**Music starts after you tap “Start playing!”**—mobile browsers block sound until you interact. The music button turns it on or off.
