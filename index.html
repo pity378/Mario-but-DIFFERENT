@@ -6,20 +6,8 @@
 <title>Super Temu Bros</title>
 <style>
   * { box-sizing: border-box; }
-
-  html, body {
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    overflow: hidden;
-  }
-
-  body {
-    background: #617de8;
-    color: white;
-    font-family: system-ui, sans-serif;
-    user-select: none;
-  }
+  html, body { width: 100%; height: 100%; margin: 0; overflow: hidden; }
+  body { background: #617de8; color: white; font-family: system-ui, sans-serif; user-select: none; }
 
   canvas {
     position: fixed;
@@ -33,70 +21,75 @@
   #hud {
     position: fixed;
     z-index: 2;
-    top: max(10px, env(safe-area-inset-top));
-    left: 10px;
-    right: 10px;
+    top: max(8px, env(safe-area-inset-top));
+    left: 8px;
+    right: 8px;
     display: flex;
-    align-items: flex-start;
     justify-content: space-between;
-    gap: 6px;
+    align-items: flex-start;
+    gap: 5px;
     pointer-events: none;
     text-shadow: 0 2px 4px #17213d;
   }
 
   .badge, .hud-button {
-    padding: 8px 10px;
+    padding: 7px 9px;
     border: 2px solid #ffffffa8;
     border-radius: 8px;
     color: white;
-    background: #17243cbd;
-    font: 800 clamp(11px, 3vw, 16px) system-ui, sans-serif;
+    background: #17243cce;
+    font: 800 clamp(10px, 2.8vw, 15px) system-ui, sans-serif;
   }
 
-  .hud-button {
-    pointer-events: auto;
-    cursor: pointer;
-  }
+  .hud-button { pointer-events: auto; cursor: pointer; }
 
   #controls {
     position: fixed;
     z-index: 3;
     left: 0;
     right: 0;
-    bottom: max(14px, env(safe-area-inset-bottom));
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 14px;
+    bottom: max(10px, env(safe-area-inset-bottom));
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: end;
+    gap: 4px;
+    padding: 0 6px;
     pointer-events: none;
   }
 
-  .button-group {
+  .touch-player {
     display: flex;
-    gap: 9px;
+    align-items: center;
+    gap: clamp(2px, 1vw, 7px);
+    pointer-events: none;
+  }
+
+  .touch-player:last-child { justify-content: flex-end; }
+
+  .touch-player span {
+    font: 900 10px system-ui, sans-serif;
+    text-shadow: 0 1px 3px #111;
   }
 
   .control {
-    width: clamp(54px, 15vw, 76px);
-    height: clamp(54px, 15vw, 76px);
+    width: clamp(38px, 10.5vw, 66px);
+    height: clamp(44px, 12vw, 66px);
+    padding: 0;
     border: 2px solid #ffffffc0;
-    border-radius: 13px;
+    border-radius: 12px;
     color: white;
     background: #30346ddd;
-    font-size: 27px;
+    font-size: clamp(18px, 5vw, 26px);
     font-weight: 900;
-    box-shadow: 0 5px 0 #161a4599;
+    box-shadow: 0 4px 0 #161a4599;
     pointer-events: auto;
     touch-action: none;
   }
 
-  #jump { background: #e95491ee; }
-  #action { background: #31a777ee; font-size: 21px; }
+  .jump-button { background: #e95491ee; }
+  .pipe-button { background: #31a777ee; font-size: 19px; }
 
-  .control:active {
-    transform: translateY(3px);
-    box-shadow: 0 2px 0 #161a4599;
-  }
+  .control:active { transform: translateY(3px); }
 
   #screen {
     position: fixed;
@@ -105,7 +98,7 @@
     display: grid;
     place-items: center;
     overflow: auto;
-    padding: 22px;
+    padding: 20px;
     background: #617de8;
   }
 
@@ -113,7 +106,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    opacity: .24;
+    opacity: .22;
     background-image:
       linear-gradient(90deg, transparent 96%, #fff 96%),
       linear-gradient(transparent 96%, #fff 96%);
@@ -123,8 +116,8 @@
 
   #menu {
     position: relative;
-    width: min(620px, 100%);
-    padding: 20px;
+    width: min(600px, 100%);
+    padding: 18px;
     text-align: center;
     font-family: "Courier New", monospace;
   }
@@ -132,29 +125,29 @@
   .scoreline {
     display: flex;
     justify-content: space-between;
-    gap: 8px;
+    gap: 6px;
     margin: 0 auto 12px;
     max-width: 520px;
-    font-size: clamp(12px, 3vw, 18px);
+    font-size: clamp(11px, 3vw, 17px);
     font-weight: 900;
     text-shadow: 2px 2px #293675;
   }
 
   #title-plaque {
-    margin: 0 auto 22px;
-    padding: clamp(20px, 6vw, 38px) 12px;
-    width: min(540px, 100%);
+    width: min(520px, 100%);
+    margin: 0 auto 18px;
+    padding: clamp(18px, 5vw, 34px) 10px;
     border: 7px solid #793416;
     outline: 4px solid #f7bd83;
     background: #df531d;
-    box-shadow: 0 9px 0 #57283a, inset 0 0 0 4px #ff9a55;
+    box-shadow: 0 8px 0 #57283a, inset 0 0 0 4px #ff9a55;
     color: #fff0d4;
     text-shadow: 4px 5px 0 #712d28;
   }
 
   #title-plaque h1 {
     margin: 0;
-    font-size: clamp(35px, 11vw, 76px);
+    font-size: clamp(34px, 10vw, 70px);
     line-height: .95;
     letter-spacing: -4px;
   }
@@ -162,51 +155,37 @@
   #title-plaque .subtitle {
     display: block;
     margin-top: 12px;
-    font-size: clamp(14px, 4vw, 24px);
+    font-size: clamp(12px, 3.5vw, 22px);
     font-weight: 900;
-    letter-spacing: 3px;
-  }
-
-  #copyright {
-    margin: 15px 0 24px;
-    font-size: clamp(12px, 3.5vw, 18px);
-    font-weight: 900;
+    letter-spacing: 2px;
   }
 
   #menu-message {
-    min-height: 48px;
-    margin: 0 auto 12px;
-    max-width: 480px;
-    font-family: system-ui, sans-serif;
-    font-size: clamp(14px, 3.6vw, 18px);
-    font-weight: 700;
-    line-height: 1.4;
+    min-height: 46px;
+    margin: 12px auto;
+    max-width: 470px;
+    font: 700 clamp(14px, 3.5vw, 18px)/1.4 system-ui, sans-serif;
   }
 
-  #play {
+  .menu-button {
     display: block;
+    width: min(350px, 100%);
     margin: 10px auto;
-    padding: 13px 20px;
-    width: min(360px, 100%);
+    padding: 12px;
     border: 3px solid #fff2c6;
     border-radius: 4px;
     color: white;
     background: #287e42;
-    box-shadow: 0 6px 0 #174b35;
-    font: 900 clamp(16px, 4vw, 22px) "Courier New", monospace;
+    box-shadow: 0 5px 0 #174b35;
+    font: 900 clamp(15px, 4vw, 21px) "Courier New", monospace;
     cursor: pointer;
   }
 
-  #play:active {
-    transform: translateY(4px);
-    box-shadow: 0 2px 0 #174b35;
-  }
+  #mode-button { background: #354a9a; box-shadow: 0 5px 0 #233266; }
 
   #menu-bottom {
-    margin-top: 18px;
-    font-family: system-ui, sans-serif;
-    font-size: 13px;
-    font-weight: 700;
+    margin-top: 15px;
+    font: 700 12px system-ui, sans-serif;
   }
 
   #screen-language {
@@ -224,32 +203,39 @@
 
   .hidden { display: none !important; }
 
-  @media (max-height: 560px) {
-    #menu { padding: 8px; }
-    #title-plaque { margin-bottom: 12px; padding: 14px 8px; }
-    #copyright { margin: 8px 0 12px; }
-    #menu-bottom { margin-top: 8px; }
+  @media (max-height: 500px) {
+    #menu { padding: 6px; }
+    #title-plaque { margin-bottom: 10px; padding: 12px 8px; }
+    #menu-message { min-height: 30px; margin: 7px auto; }
+    #menu-bottom { margin-top: 7px; }
   }
 </style>
 </head>
 <body>
-<canvas id="game" aria-label="Super Temu Bros game"></canvas>
+<canvas id="game" aria-label="Super Temu Bros split-screen game"></canvas>
 
 <div id="hud">
-  <div class="badge">🪙 <span id="coins">0</span> &nbsp; 💛 <span id="lives">3</span></div>
+  <div class="badge">🪙 <span id="coins">0</span> · 💛 <span id="lives">3</span></div>
   <div class="badge" id="levelLabel">WORLD 1-1</div>
-  <button class="hud-button" id="language" aria-label="Change language">ES</button>
-  <button class="hud-button" id="music" aria-label="Toggle music">♫</button>
+  <button class="hud-button" id="language">ES</button>
+  <button class="hud-button" id="music">♫</button>
 </div>
 
 <div id="controls">
-  <div class="button-group">
-    <button class="control" id="left" aria-label="Move left">◀</button>
-    <button class="control" id="right" aria-label="Move right">▶</button>
+  <div class="touch-player">
+    <span>P1</span>
+    <button class="control" id="p1left" aria-label="Player 1 left">◀</button>
+    <button class="control" id="p1right" aria-label="Player 1 right">▶</button>
+    <button class="control jump-button" id="p1jump" aria-label="Player 1 jump">⬆</button>
   </div>
-  <div class="button-group">
-    <button class="control" id="action" aria-label="Enter pipe">⬇</button>
-    <button class="control" id="jump" aria-label="Jump">⬆</button>
+
+  <button class="control pipe-button" id="pipe" aria-label="Enter pipe">⬇</button>
+
+  <div class="touch-player">
+    <span>P2</span>
+    <button class="control" id="p2left" aria-label="Player 2 left">◀</button>
+    <button class="control" id="p2right" aria-label="Player 2 right">▶</button>
+    <button class="control jump-button" id="p2jump" aria-label="Player 2 jump">⬆</button>
   </div>
 </div>
 
@@ -259,7 +245,7 @@
     <div class="scoreline">
       <span id="menu-coins">COINS 000</span>
       <span id="menu-world">WORLD 1-1</span>
-      <span id="menu-time">READY!</span>
+      <span>READY!</span>
     </div>
 
     <div id="title-plaque">
@@ -267,12 +253,10 @@
       <span class="subtitle">BARGAIN KINGDOM ADVENTURE</span>
     </div>
 
-    <div id="copyright">★ A NEW PIXEL ADVENTURE ★</div>
-    <p id="menu-message">
-      Six worlds to explore! Collect coins, dodge grumpy parcels, and find the next pipe.
-    </p>
-    <button id="play">▶ &nbsp; 1 PLAYER GAME</button>
-    <div id="menu-bottom">MOVE ◀ ▶ &nbsp; JUMP ⬆ &nbsp; PIPE ⬇</div>
+    <p id="menu-message"></p>
+    <button class="menu-button" id="mode-button">👤 1 PLAYER</button>
+    <button class="menu-button" id="play">▶ START GAME</button>
+    <div id="menu-bottom"></div>
   </main>
 </div>
 
@@ -287,170 +271,147 @@
   let width = innerWidth;
   let height = innerHeight;
   let pixelRatio = 1;
+  let layout = "side";
+  let viewWidth = width / 2;
+  let viewHeight = height;
   let groundY = height - 90;
-  let cameraX = 0;
-  let lastFrameTime = 0;
-  let language = "en";
   let running = false;
+  let twoPlayers = false;
+  let language = "en";
   let coins = 0;
   let lives = 3;
-  let levelIndex = 0;
+  let worldIndex = 0;
+  let lastTime = 0;
   let pickups = [];
   let enemies = [];
-
-  const keys = { left: false, right: false };
-  const player = {
-    x: 60, y: 0, width: 36, height: 48,
-    vx: 0, vy: 0, grounded: false, invulnerable: 0
-  };
-
   let audioContext = null;
   let musicTimer = null;
   let musicEnabled = true;
-  let musicNote = 0;
+  let musicStep = 0;
 
-  const worldNames = {
-    en: [
-      "Sunny Sale Hills",
-      "Bubblewrap Bay",
-      "Cardboard Canyon",
-      "Jellybean Jungle",
-      "Midnight Market",
-      "Golden Checkout"
-    ],
-    es: [
-      "Colinas de ofertas",
-      "Bahía de burbujas",
-      "Cañón de cartón",
-      "Selva de caramelos",
-      "Mercado nocturno",
-      "Caja dorada"
-    ]
+  const keys = {
+    p1Left: false, p1Right: false,
+    p2Left: false, p2Right: false
   };
 
-  const translations = {
+  function createPlayer(x, shirt, bag) {
+    return {
+      x, y: 0, w: 34, h: 46, vx: 0, vy: 0,
+      grounded: false, invulnerable: 0, shirt, bag
+    };
+  }
+
+  const players = [
+    createPlayer(60, "#138b91", "#ffd451"),
+    createPlayer(110, "#7355b8", "#69df94")
+  ];
+
+  const names = {
+    en: ["Sunny Sale Hills", "Bubblewrap Bay", "Cardboard Canyon", "Jellybean Jungle", "Midnight Market", "Golden Checkout"],
+    es: ["Colinas de ofertas", "Bahía de burbujas", "Cañón de cartón", "Selva de caramelos", "Mercado nocturno", "Caja dorada"]
+  };
+
+  const words = {
     en: {
-      intro: "Six worlds to explore! Collect coins, dodge grumpy parcels, and find the next pipe.",
-      start: "▶   1 PLAYER GAME",
-      again: "▶   PLAY AGAIN",
-      failTitle: "📦 OOPS!",
-      winTitle: "🏆 YOU DID IT!",
-      fail: "You ran out of lives. Ready for another try?",
-      win: "You conquered all six worlds. What a legendary shopping trip!",
-      ready: "READY!",
-      move: "MOVE ◀ ▶   JUMP ⬆   PIPE ⬇",
-      musicOn: "♫",
-      musicOff: "♫×"
+      intro: "Six worlds! Play solo or team up. Each player gets their own screen and mobile controls.",
+      one: "👤 1 PLAYER", two: "👥 2 PLAYERS",
+      start: "▶ START GAME", again: "▶ PLAY AGAIN",
+      fail: "Game over! Ready for another try?",
+      win: "You conquered all six worlds!",
+      controls: "P1: ARROWS · P2: WASD · JUMP: UP / W · PIPE: DOWN / S"
     },
     es: {
-      intro: "¡Explora seis mundos! Recoge monedas, esquiva paquetes gruñones y encuentra la próxima tubería.",
-      start: "▶   JUGAR",
-      again: "▶   JUGAR DE NUEVO",
-      failTitle: "📦 ¡UPS!",
-      winTitle: "🏆 ¡LO LOGRASTE!",
-      fail: "Te quedaste sin vidas. ¿Listo para intentarlo otra vez?",
-      win: "Conquistaste los seis mundos. ¡Qué viaje de compras legendario!",
-      ready: "¡LISTO!",
-      move: "MOVER ◀ ▶   SALTAR ⬆   TUBERÍA ⬇",
-      musicOn: "♫",
-      musicOff: "♫×"
+      intro: "¡Seis mundos! Juega solo o en equipo. Cada jugador tiene su propia pantalla y controles móviles.",
+      one: "👤 1 JUGADOR", two: "👥 2 JUGADORES",
+      start: "▶ EMPEZAR", again: "▶ JUGAR DE NUEVO",
+      fail: "¡Fin del juego! ¿Quieres intentarlo otra vez?",
+      win: "¡Conquistaste los seis mundos!",
+      controls: "P1: FLECHAS · P2: WASD · SALTAR: ↑ / W · TUBERÍA: ↓ / S"
     }
   };
 
   const themes = [
-    { skyTop:"#5dc8ff", skyBottom:"#d6f7ff", hill:"#65c88b", ground:"#986044", grass:"#44bd72", pipe:"#2cb75d", coin:"#ffe27a" },
-    { skyTop:"#51b8d5", skyBottom:"#c8f4ec", hill:"#47aa9b", ground:"#8b5949", grass:"#42b89c", pipe:"#287f8e", coin:"#ffdc73" },
-    { skyTop:"#e89758", skyBottom:"#ffe1a2", hill:"#bb704d", ground:"#765044", grass:"#c78c53", pipe:"#468c65", coin:"#fff08a" },
-    { skyTop:"#5ab78d", skyBottom:"#c9f0a2", hill:"#3f9467", ground:"#705642", grass:"#57b95e", pipe:"#32834d", coin:"#ffe46f" },
-    { skyTop:"#343b77", skyBottom:"#a8a2e8", hill:"#5555a0", ground:"#634c72", grass:"#6fbe86", pipe:"#59a86a", coin:"#fff0a0" },
-    { skyTop:"#f19068", skyBottom:"#ffe5a7", hill:"#d6a64c", ground:"#916047", grass:"#71bd66", pipe:"#40975b", coin:"#fff37a" }
+    { top:"#5dc8ff", bottom:"#d6f7ff", hill:"#65c88b", dirt:"#986044", grass:"#44bd72", pipe:"#2cb75d", coin:"#ffe27a" },
+    { top:"#51b8d5", bottom:"#c8f4ec", hill:"#47aa9b", dirt:"#8b5949", grass:"#42b89c", pipe:"#287f8e", coin:"#ffdc73" },
+    { top:"#e89758", bottom:"#ffe1a2", hill:"#bb704d", dirt:"#765044", grass:"#c78c53", pipe:"#468c65", coin:"#fff08a" },
+    { top:"#5ab78d", bottom:"#c9f0a2", hill:"#3f9467", dirt:"#705642", grass:"#57b95e", pipe:"#32834d", coin:"#ffe46f" },
+    { top:"#343b77", bottom:"#a8a2e8", hill:"#5555a0", dirt:"#634c72", grass:"#6fbe86", pipe:"#59a86a", coin:"#fff0a0" },
+    { top:"#f19068", bottom:"#ffe5a7", hill:"#d6a64c", dirt:"#916047", grass:"#71bd66", pipe:"#40975b", coin:"#fff37a" }
   ];
 
-  // World layouts are generated from each world's settings.
   function makeWorlds() {
-    return themes.map((theme, index) => {
-      const length = 2400 + index * 240;
-      const gapCount = 3 + Math.floor(index / 2);
-      const gapWidth = 92 + index * 6;
+    return themes.map((_, index) => {
+      const length = 2200 + index * 240;
       const gaps = [];
-      const ledges = [];
-      const coinSpots = [];
-      const enemySpots = [];
+      const platforms = [];
+      const coinsInWorld = [];
+      const enemiesInWorld = [];
 
-      for (let i = 0; i < gapCount; i++) {
-        const start = 430 + i * 470;
-        gaps.push([start, start + gapWidth]);
+      for (let i = 0; i < 3 + Math.floor(index / 2); i++) {
+        const start = 410 + i * 440;
+        const end = start + 90 + index * 5;
+        gaps.push([start, end]);
 
-        // Low, reachable platforms near gaps.
-        ledges.push([start - 155, 108 + (i % 2) * 10, 78 + (index % 3) * 8]);
-        coinSpots.push([start - 112, 145 + (i % 2) * 12]);
-        coinSpots.push([start + gapWidth + 58, 68]);
+        platforms.push([start - 145, 110, 82 + (index % 3) * 7]);
+        coinsInWorld.push([start - 105, 145]);
+        coinsInWorld.push([end + 55, 70]);
 
-        const enemyX = start + gapWidth + 135;
-        if (enemyX < length - 210) {
-          enemySpots.push([
-            enemyX,
-            enemyX - 45,
-            enemyX + 70,
-            55 + index * 9
-          ]);
+        const enemyX = end + 140;
+        if (enemyX < length - 190) {
+          enemiesInWorld.push([enemyX, enemyX - 40, enemyX + 65, 55 + index * 8]);
         }
       }
 
-      // Extra raised platforms and coins make each world feel distinct.
       for (let i = 0; i < 3; i++) {
-        const x = 250 + i * 660 + index * 25;
-        if (x + 140 < length - 180) {
-          ledges.push([x, 118, 100 + ((i + index) % 3) * 12]);
-          coinSpots.push([x + 50, 145 + ((i + index) % 3) * 12]);
+        const x = 245 + i * 600 + index * 20;
+        if (x + 130 < length - 180) {
+          const platformHeight = 105 + ((i + index) % 3) * 10;
+          platforms.push([x, 115, platformHeight]);
+          coinsInWorld.push([x + 50, platformHeight + 45]);
         }
       }
 
       return {
         length,
         gaps,
-        ledges,
-        coins: coinSpots,
-        enemies: enemySpots,
-        pipeX: length - 105
+        platforms,
+        coins: coinsInWorld,
+        enemies: enemiesInWorld,
+        pipeX: length - 95
       };
     });
   }
 
   const worlds = makeWorlds();
+  const t = key => words[language][key];
+  const world = () => worlds[worldIndex];
 
-  function t(key) {
-    return translations[language][key];
-  }
-
-  function currentWorld() {
-    return worlds[levelIndex];
-  }
-
-  function worldLabel() {
-    return `WORLD ${levelIndex + 1}-1`;
-  }
-
-  function setCanvasSize() {
+  function resize() {
     width = innerWidth;
     height = innerHeight;
     pixelRatio = Math.min(devicePixelRatio || 1, 2);
 
     canvas.width = Math.round(width * pixelRatio);
     canvas.height = Math.round(height * pixelRatio);
-    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    canvas.style.width = width + "px";
+    canvas.style.height = height + "px";
 
-    groundY = height - (width < 600 ? 108 : 88);
+    layout = width > height * 1.15 ? "side" : "stack";
+    viewWidth = layout === "side" ? width / 2 : width;
+    viewHeight = layout === "side" ? height : height / 2;
+    groundY = viewHeight - (viewWidth < 430 ? 82 : 94);
 
-    for (const pickup of pickups) {
-      pickup.y = groundY - pickup.height;
-    }
+    pickups.forEach(coin => coin.y = groundY - coin.height);
 
     if (!running) {
-      player.y = groundY - player.height;
+      players.forEach(player => player.y = groundY - player.h);
     }
 
     updateHud();
+  }
+
+  function worldLabel() {
+    return `WORLD ${worldIndex + 1}-1`;
   }
 
   function updateHud() {
@@ -461,49 +422,55 @@
     $("menu-coins").textContent = `COINS ${String(coins).padStart(3, "0")}`;
   }
 
-  function prepareWorld() {
-    const world = currentWorld();
+  function updateMenu() {
+    $("menu-message").textContent = t("intro");
+    $("menu-bottom").textContent = t("controls");
+    $("mode-button").textContent = twoPlayers ? t("two") : t("one");
+    $("play").textContent = t("start");
+    updateHud();
+  }
 
-    pickups = world.coins.map(([x, coinHeight]) => ({
-      x,
-      height: coinHeight,
-      y: groundY - coinHeight,
-      collected: false
+  function setupWorld() {
+    const current = world();
+
+    pickups = current.coins.map(([x, h]) => ({
+      x, height: h, y: groundY - h, collected: false
     }));
 
-    enemies = world.enemies.map(([x, min, max, speed]) => ({
+    enemies = current.enemies.map(([x, min, max, speed]) => ({
       x, min, max, speed, direction: 1, alive: true
     }));
 
-    player.x = 60;
-    player.y = groundY - player.height;
-    player.vx = 0;
-    player.vy = 0;
-    player.grounded = false;
-    player.invulnerable = 0;
-    cameraX = 0;
+    players[0].x = 55;
+    players[1].x = 55;
+    players.forEach(player => {
+      player.y = groundY - player.h;
+      player.vx = 0;
+      player.vy = 0;
+      player.grounded = false;
+      player.invulnerable = 0;
+    });
+
     updateHud();
   }
 
   function startGame() {
     coins = 0;
     lives = 3;
-    levelIndex = 0;
-    prepareWorld();
+    worldIndex = 0;
+    setupWorld();
     running = true;
     $("screen").classList.add("hidden");
     startMusic();
-    lastFrameTime = performance.now();
+    lastTime = performance.now();
   }
 
-  function endGame(won) {
+  function finishGame(won) {
     running = false;
     stopMusic();
-
     $("title-plaque").innerHTML = won
-      ? `<h1>WORLD<br>COMPLETE!</h1><span class="subtitle">SUPER TEMU BROS</span>`
-      : `<h1>GAME<br>OVER</h1><span class="subtitle">SUPER TEMU BROS</span>`;
-
+      ? "<h1>WORLD<br>COMPLETE!</h1><span class='subtitle'>SUPER TEMU BROS</span>"
+      : "<h1>GAME<br>OVER</h1><span class='subtitle'>SUPER TEMU BROS</span>";
     $("menu-message").textContent = won ? t("win") : t("fail");
     $("play").textContent = t("again");
     $("screen").classList.remove("hidden");
@@ -511,7 +478,6 @@
 
   function startMusic() {
     if (!musicEnabled) return;
-
     const AudioContextClass = window.AudioContext || window.webkitAudioContext;
     if (!AudioContextClass) return;
 
@@ -519,21 +485,18 @@
     audioContext.resume();
     clearInterval(musicTimer);
 
-    // Original chiptune notes, written for this game.
-    const notes = [523,659,784,659,587,698,880,698,523,659,784,988,880,784,659,587];
+    const notes = [523, 659, 784, 659, 587, 698, 880, 698, 523, 659, 784, 988, 880, 784, 659, 587];
 
     musicTimer = setInterval(() => {
-      if (!running || !musicEnabled || !audioContext) return;
-
+      if (!running || !musicEnabled) return;
       const now = audioContext.currentTime;
       const oscillator = audioContext.createOscillator();
       const gain = audioContext.createGain();
 
       oscillator.type = "square";
-      oscillator.frequency.value = notes[musicNote++ % notes.length];
-      gain.gain.setValueAtTime(0.022, now);
+      oscillator.frequency.value = notes[musicStep++ % notes.length];
+      gain.gain.setValueAtTime(0.02, now);
       gain.gain.exponentialRampToValueAtTime(0.001, now + 0.13);
-
       oscillator.connect(gain);
       gain.connect(audioContext.destination);
       oscillator.start(now);
@@ -545,364 +508,346 @@
     clearInterval(musicTimer);
   }
 
-  function jump() {
+  function jump(player) {
     if (running && player.grounded) {
-      player.vy = -680;
+      player.vy = -640;
       player.grounded = false;
     }
   }
 
   function enterPipe() {
-    if (!running || !player.grounded) return;
+    if (!running) return;
 
-    const distance = Math.abs(
-      player.x + player.width / 2 - currentWorld().pipeX
+    const team = twoPlayers ? players : [players[0]];
+    const ready = team.every(player =>
+      player.grounded &&
+      Math.abs(player.x + player.w / 2 - world().pipeX) < 75
     );
 
-    if (distance > 72) return;
+    if (!ready) return;
 
-    if (levelIndex < worlds.length - 1) {
-      levelIndex++;
-      prepareWorld();
+    if (worldIndex < worlds.length - 1) {
+      worldIndex++;
+      setupWorld();
     } else {
-      endGame(true);
+      finishGame(true);
     }
   }
 
   function overlaps(a, b) {
-    return a.x < b.x + b.width &&
-      a.x + a.width > b.x &&
-      a.y < b.y + b.height &&
-      a.y + a.height > b.y;
+    return a.x < b.x + b.w &&
+      a.x + a.w > b.x &&
+      a.y < b.y + b.h &&
+      a.y + a.h > b.y;
   }
 
   function loseLife() {
-    if (!running || player.invulnerable > 0) return;
+    if (!running || players.some(player => player.invulnerable > 0)) return;
 
     lives--;
-    updateHud();
-
     if (lives <= 0) {
-      endGame(false);
+      updateHud();
+      finishGame(false);
       return;
     }
 
-    player.x = 60;
-    player.y = groundY - player.height - 4;
-    player.vx = 0;
-    player.vy = 0;
-    player.grounded = false;
-    player.invulnerable = 1.5;
-    cameraX = 0;
+    players.forEach((player, index) => {
+      player.x = 55 + index * 42;
+      player.y = groundY - player.h - 3;
+      player.vx = 0;
+      player.vy = 0;
+      player.grounded = false;
+      player.invulnerable = 1.5;
+    });
+
+    updateHud();
   }
 
-  function isOverGap() {
-    const playerCenter = player.x + player.width / 2;
-    return currentWorld().gaps.some(
-      ([start, end]) => playerCenter > start && playerCenter < end
-    );
+  function overGap(player) {
+    const center = player.x + player.w / 2;
+    return world().gaps.some(([a, b]) => center > a && center < b);
   }
 
-  function update(deltaTime) {
-    if (!running) return;
-
-    const dt = Math.min(deltaTime, 0.033);
-    const world = currentWorld();
-
+  function updatePlayer(player, left, right, dt) {
     player.invulnerable = Math.max(0, player.invulnerable - dt);
-    player.vx = ((keys.right ? 1 : 0) - (keys.left ? 1 : 0)) * 300;
-    player.x = Math.max(
-      0,
-      Math.min(world.length - player.width, player.x + player.vx * dt)
-    );
+    player.vx = ((right ? 1 : 0) - (left ? 1 : 0)) * 270;
+    player.x = Math.max(0, Math.min(world().length - player.w, player.x + player.vx * dt));
 
-    const previousBottom = player.y + player.height;
-    player.vy += 1750 * dt;
+    const oldBottom = player.y + player.h;
+    player.vy += 1650 * dt;
     player.y += player.vy * dt;
     player.grounded = false;
 
-    // Ground collision, except over gaps.
     if (
-      !isOverGap() &&
+      !overGap(player) &&
       player.vy >= 0 &&
-      previousBottom <= groundY + 2 &&
-      player.y + player.height >= groundY
+      oldBottom <= groundY + 2 &&
+      player.y + player.h >= groundY
     ) {
-      player.y = groundY - player.height;
+      player.y = groundY - player.h;
       player.vy = 0;
       player.grounded = true;
     }
 
-    // Raised platform collision.
-    for (const [platformX, platformWidth, platformHeight] of world.ledges) {
-      const platformY = groundY - platformHeight;
-      const overPlatform =
-        player.x + player.width > platformX &&
-        player.x < platformX + platformWidth;
-
+    for (const [x, w, h] of world().platforms) {
+      const platformY = groundY - h;
       if (
-        overPlatform &&
+        player.x + player.w > x &&
+        player.x < x + w &&
         player.vy >= 0 &&
-        previousBottom <= platformY + 3 &&
-        player.y + player.height >= platformY
+        oldBottom <= platformY + 3 &&
+        player.y + player.h >= platformY
       ) {
-        player.y = platformY - player.height;
+        player.y = platformY - player.h;
         player.vy = 0;
         player.grounded = true;
       }
     }
+  }
 
-    // Collect coins.
-    for (const pickup of pickups) {
-      if (pickup.collected) continue;
+  function update(dt) {
+    if (!running) return;
+    dt = Math.min(dt, 0.033);
 
-      if (overlaps(player, {
-        x: pickup.x - 11,
-        y: pickup.y - 12,
-        width: 22,
-        height: 24
-      })) {
-        pickup.collected = true;
+    updatePlayer(players[0], keys.p1Left, keys.p1Right, dt);
+    if (twoPlayers) {
+      updatePlayer(players[1], keys.p2Left, keys.p2Right, dt);
+    }
+
+    const activePlayers = twoPlayers ? players : [players[0]];
+
+    for (const coin of pickups) {
+      if (coin.collected) continue;
+      if (activePlayers.some(player =>
+        overlaps(player, { x: coin.x - 10, y: coin.y - 12, w: 20, h: 24 })
+      )) {
+        coin.collected = true;
         coins++;
         updateHud();
       }
     }
 
-    // Enemies can be jumped on or avoided.
     for (const enemy of enemies) {
       if (!enemy.alive) continue;
-
       enemy.x += enemy.direction * enemy.speed * dt;
       if (enemy.x < enemy.min || enemy.x > enemy.max) {
         enemy.direction *= -1;
         enemy.x = Math.max(enemy.min, Math.min(enemy.max, enemy.x));
       }
 
-      const enemyBox = {
-        x: enemy.x,
-        y: groundY - 31,
-        width: 34,
-        height: 31
-      };
+      const box = { x: enemy.x, y: groundY - 30, w: 32, h: 30 };
+      for (const player of activePlayers) {
+        if (!overlaps(player, box)) continue;
 
-      if (!overlaps(player, enemyBox)) continue;
-
-      if (player.vy > 100 && previousBottom <= enemyBox.y + 14) {
-        enemy.alive = false;
-        player.vy = -390;
-      } else {
-        loseLife();
+        const previousBottom = player.y + player.h - player.vy * dt;
+        if (player.vy > 80 && previousBottom < box.y + 13) {
+          enemy.alive = false;
+          player.vy = -350;
+        } else {
+          loseLife();
+        }
+        break;
       }
-      break;
     }
 
-    if (player.y > height + 80) {
+    if (activePlayers.some(player => player.y > viewHeight + 70)) {
       loseLife();
     }
 
     if (!running) return;
 
-    cameraX = Math.max(
-      0,
-      Math.min(world.length - width, player.x - width * 0.36)
-    );
-    updateHud();
+    // The camera is calculated separately for each player when drawing.
+    $("levelLabel").textContent = worldLabel();
   }
 
-  function drawBackground(theme) {
-    const gradient = ctx.createLinearGradient(0, 0, 0, height);
-    gradient.addColorStop(0, theme.skyTop);
-    gradient.addColorStop(1, theme.skyBottom);
+  function drawBackground(theme, camera) {
+    const gradient = ctx.createLinearGradient(0, 0, 0, viewHeight);
+    gradient.addColorStop(0, theme.top);
+    gradient.addColorStop(1, theme.bottom);
     ctx.fillStyle = gradient;
-    ctx.fillRect(0, 0, width, height);
+    ctx.fillRect(0, 0, viewWidth, viewHeight);
 
-    for (let i = 0; i < 9; i++) {
-      const x = i * 310 - (cameraX * 0.18 % 310);
+    for (let i = 0; i < 7; i++) {
+      const x = i * 280 - (camera * 0.18 % 280);
       ctx.fillStyle = theme.hill;
       ctx.beginPath();
-      ctx.ellipse(x + 130, groundY + 8, 170, 95, 0, Math.PI, Math.PI * 2);
+      ctx.ellipse(x + 110, groundY + 8, 150, 88, 0, Math.PI, Math.PI * 2);
       ctx.fill();
     }
 
     ctx.fillStyle = "#ffffffdd";
-    for (let i = 0; i < 7; i++) {
-      const x = ((i * 270 - cameraX * 0.12) % (width + 280) + width + 280) % (width + 280) - 100;
-      const y = 76 + (i % 3) * 48;
-
+    for (let i = 0; i < 5; i++) {
+      const x = ((i * 220 - camera * 0.12) % (viewWidth + 240) + viewWidth + 240) % (viewWidth + 240) - 80;
+      const y = 55 + (i % 3) * 38;
       ctx.beginPath();
-      ctx.arc(x, y, 23, 0, Math.PI * 2);
-      ctx.arc(x + 29, y - 12, 31, 0, Math.PI * 2);
-      ctx.arc(x + 60, y, 23, 0, Math.PI * 2);
+      ctx.arc(x, y, 18, 0, Math.PI * 2);
+      ctx.arc(x + 24, y - 9, 25, 0, Math.PI * 2);
+      ctx.arc(x + 48, y, 18, 0, Math.PI * 2);
       ctx.fill();
     }
   }
 
-  function drawGround(start, end, theme) {
-    const x = start - cameraX;
-    const groundWidth = end - start;
+  function drawPlayer(player, camera, label) {
+    if (player.invulnerable > 0 && Math.floor(player.invulnerable * 12) % 2 === 0) return;
 
-    if (x > width || x + groundWidth < 0) return;
+    const x = player.x - camera;
+    const y = player.y;
 
-    ctx.fillStyle = theme.grass;
-    ctx.fillRect(x, groundY, groundWidth, 14);
-    ctx.fillStyle = theme.ground;
-    ctx.fillRect(x, groundY + 14, groundWidth, height - groundY);
+    ctx.fillStyle = "#173d4d";
+    ctx.fillRect(x + 4, y + 40, 11, 6);
+    ctx.fillRect(x + 20, y + 40, 11, 6);
 
-    ctx.fillStyle = "#ffffff25";
-    for (let tileX = x + 18; tileX < x + groundWidth; tileX += 58) {
-      ctx.fillRect(tileX, groundY + 36, 27, 4);
-    }
-  }
+    ctx.fillStyle = "#f07a3d";
+    ctx.fillRect(x + 6, y + 7, 23, 9);
+    ctx.fillRect(x + 2, y + 13, 30, 5);
 
-  function drawPipe(x, theme, active) {
-    const screenX = x - cameraX;
-    const y = groundY - 62;
+    ctx.fillStyle = "#f3bd8e";
+    ctx.fillRect(x + 8, y + 15, 20, 17);
 
-    ctx.fillStyle = theme.pipe;
-    ctx.fillRect(screenX + 7, y + 10, 52, 52);
-    ctx.fillRect(screenX, y, 66, 19);
+    ctx.fillStyle = "#293449";
+    ctx.fillRect(x + 13, y + 21, 3, 4);
+    ctx.fillRect(x + 22, y + 21, 3, 4);
 
-    ctx.fillStyle = "#ffffff50";
-    ctx.fillRect(screenX + 7, y + 3, 10, 12);
-    ctx.fillStyle = "#00000020";
-    ctx.fillRect(screenX + 54, y + 4, 8, 55);
+    ctx.fillStyle = "#70443c";
+    ctx.fillRect(x + 13, y + 28, 11, 3);
 
-    if (active) {
-      ctx.fillStyle = "#fff";
-      ctx.font = "bold 15px system-ui";
+    ctx.fillStyle = player.shirt;
+    ctx.fillRect(x + 5, y + 31, 25, 13);
+
+    ctx.fillStyle = player.bag;
+    ctx.fillRect(x + 26, y + 33, 8, 11);
+
+    if (twoPlayers) {
+      ctx.fillStyle = "white";
+      ctx.font = "bold 10px system-ui";
       ctx.textAlign = "center";
-      ctx.fillText("⬇", screenX + 33, y - 8);
+      ctx.fillText(label, x + player.w / 2, y - 3);
       ctx.textAlign = "left";
     }
   }
 
-  function drawPlayer() {
-    if (
-      player.invulnerable > 0 &&
-      Math.floor(player.invulnerable * 12) % 2 === 0
-    ) return;
+  function drawWorldInView(player, playerNumber, xOffset, yOffset) {
+    const camera = Math.max(0, Math.min(
+      world().length - viewWidth,
+      player.x + player.w / 2 - viewWidth / 2
+    ));
 
-    const x = player.x - cameraX;
-    const y = player.y;
+    ctx.save();
+    ctx.beginPath();
+    ctx.rect(xOffset, yOffset, viewWidth, viewHeight);
+    ctx.clip();
+    ctx.translate(xOffset, yOffset);
 
-    // Original delivery-runner character.
-    ctx.fillStyle = "#173d4d";
-    ctx.fillRect(x + 5, y + 42, 12, 6);
-    ctx.fillRect(x + 21, y + 42, 12, 6);
+    const theme = themes[worldIndex];
+    drawBackground(theme, camera);
 
-    ctx.fillStyle = "#f07a3d";
-    ctx.fillRect(x + 6, y + 8, 25, 9);
-    ctx.fillRect(x + 2, y + 14, 32, 5);
+    let start = 0;
+    for (const [gapStart, gapEnd] of world().gaps) {
+      drawGround(start, gapStart, theme, camera);
+      start = gapEnd;
+    }
+    drawGround(start, world().length, theme, camera);
 
-    ctx.fillStyle = "#f3bd8e";
-    ctx.fillRect(x + 8, y + 16, 22, 18);
+    for (const [x, w, h] of world().platforms) {
+      const px = x - camera;
+      const py = groundY - h;
+      ctx.fillStyle = theme.grass;
+      ctx.fillRect(px, py, w, 10);
+      ctx.fillStyle = theme.dirt;
+      ctx.fillRect(px, py + 10, w, 7);
+    }
 
-    ctx.fillStyle = "#293449";
-    ctx.fillRect(x + 14, y + 22, 3, 4);
-    ctx.fillRect(x + 24, y + 22, 3, 4);
+    for (const coin of pickups) {
+      if (coin.collected) continue;
+      const cx = coin.x - camera;
+      ctx.fillStyle = theme.coin;
+      ctx.beginPath();
+      ctx.ellipse(cx, coin.y, 9, 13, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#fff7c0";
+      ctx.fillRect(cx - 2, coin.y - 7, 4, 14);
+    }
 
-    ctx.fillStyle = "#70443c";
-    ctx.fillRect(x + 14, y + 29, 12, 3);
+    for (const enemy of enemies) {
+      if (!enemy.alive) continue;
+      const ex = enemy.x - camera;
+      const ey = groundY - 30;
+      ctx.fillStyle = "#8d5be8";
+      ctx.fillRect(ex, ey + 5, 32, 25);
+      ctx.fillStyle = "#f5bc57";
+      ctx.fillRect(ex + 4, ey, 24, 8);
+      ctx.fillStyle = "white";
+      ctx.fillRect(ex + 7, ey + 12, 5, 5);
+      ctx.fillRect(ex + 20, ey + 12, 5, 5);
+      ctx.fillStyle = "#33234b";
+      ctx.fillRect(ex + 9, ey + 13, 2, 4);
+      ctx.fillRect(ex + 22, ey + 13, 2, 4);
+    }
 
-    ctx.fillStyle = "#138b91";
-    ctx.fillRect(x + 5, y + 33, 27, 13);
+    const pipeX = world().pipeX - camera;
+    const pipeY = groundY - 58;
+    ctx.fillStyle = theme.pipe;
+    ctx.fillRect(pipeX + 6, pipeY + 10, 48, 48);
+    ctx.fillRect(pipeX, pipeY, 60, 18);
+    ctx.fillStyle = "#ffffff55";
+    ctx.fillRect(pipeX + 7, pipeY + 3, 8, 11);
 
-    ctx.fillStyle = "#ffd451";
-    ctx.fillRect(x + 27, y + 34, 9, 12);
-    ctx.fillStyle = "#fff0a3";
-    ctx.fillRect(x + 29, y + 36, 5, 3);
+    drawPlayer(player, camera, "P" + playerNumber);
 
-    ctx.fillStyle = "#f3bd8e";
-    ctx.fillRect(x + 1, y + 34, 6, 11);
+    ctx.fillStyle = "#ffffffd9";
+    ctx.font = "bold 13px system-ui";
+    ctx.textAlign = "center";
+    ctx.fillText("PLAYER " + playerNumber, viewWidth / 2, 25);
+    ctx.textAlign = "left";
+
+    ctx.restore();
   }
 
-  function drawEnemy(enemy) {
-    if (!enemy.alive) return;
+  function drawGround(start, end, theme, camera) {
+    const x = start - camera;
+    const w = end - start;
+    if (x > viewWidth || x + w < 0) return;
 
-    const x = enemy.x - cameraX;
-    const y = groundY - 31;
-
-    ctx.fillStyle = "#8d5be8";
-    ctx.fillRect(x, y + 5, 34, 26);
-
-    ctx.fillStyle = "#f5bc57";
-    ctx.fillRect(x + 5, y, 24, 8);
-
-    ctx.fillStyle = "#fff";
-    ctx.fillRect(x + 7, y + 12, 6, 6);
-    ctx.fillRect(x + 21, y + 12, 6, 6);
-
-    ctx.fillStyle = "#33234b";
-    ctx.fillRect(x + 9, y + 14, 3, 4);
-    ctx.fillRect(x + 23, y + 14, 3, 4);
-
-    ctx.fillStyle = "#7043bf";
-    ctx.fillRect(x + 3, y + 29, 11, 4);
-    ctx.fillRect(x + 21, y + 29, 11, 4);
+    ctx.fillStyle = theme.grass;
+    ctx.fillRect(x, groundY, w, 12);
+    ctx.fillStyle = theme.dirt;
+    ctx.fillRect(x, groundY + 12, w, viewHeight - groundY);
   }
 
   function draw() {
-    const theme = themes[levelIndex];
-    const world = currentWorld();
+    ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    ctx.fillStyle = "#17213d";
+    ctx.fillRect(0, 0, width, height);
 
-    drawBackground(theme);
-
-    let groundStart = 0;
-    for (const [gapStart, gapEnd] of world.gaps) {
-      drawGround(groundStart, gapStart, theme);
-      groundStart = gapEnd;
+    if (layout === "side") {
+      drawWorldInView(players[0], 1, 0, 0);
+      drawWorldInView(twoPlayers ? players[1] : players[0], twoPlayers ? 2 : 1, width / 2, 0);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(width / 2 - 2, 0, 4, height);
+    } else {
+      drawWorldInView(players[0], 1, 0, 0);
+      drawWorldInView(twoPlayers ? players[1] : players[0], twoPlayers ? 2 : 1, 0, height / 2);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, height / 2 - 2, width, 4);
     }
-    drawGround(groundStart, world.length, theme);
-
-    for (const [x, platformWidth, platformHeight] of world.ledges) {
-      const screenX = x - cameraX;
-      const y = groundY - platformHeight;
-
-      ctx.fillStyle = theme.grass;
-      ctx.fillRect(screenX, y, platformWidth, 11);
-      ctx.fillStyle = theme.ground;
-      ctx.fillRect(screenX, y + 11, platformWidth, 8);
-      ctx.fillStyle = "#ffffff55";
-      ctx.fillRect(screenX + 5, y + 3, platformWidth - 10, 3);
-    }
-
-    for (const pickup of pickups) {
-      if (pickup.collected) continue;
-
-      const x = pickup.x - cameraX;
-      ctx.fillStyle = theme.coin;
-      ctx.beginPath();
-      ctx.ellipse(x, pickup.y, 10, 14, 0, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.fillStyle = "#fff7c0";
-      ctx.fillRect(x - 2, pickup.y - 8, 4, 16);
-    }
-
-    for (const enemy of enemies) drawEnemy(enemy);
-
-    const nearPipe =
-      player.grounded &&
-      Math.abs(player.x + player.width / 2 - world.pipeX) < 90;
-
-    drawPipe(world.pipeX, theme, nearPipe);
-    drawPlayer();
   }
 
   function frame(now) {
-    const deltaTime = lastFrameTime ? (now - lastFrameTime) / 1000 : 0;
-    lastFrameTime = now;
-    update(deltaTime);
+    const dt = lastTime ? (now - lastTime) / 1000 : 0;
+    lastTime = now;
+    update(dt);
     draw();
     requestAnimationFrame(frame);
   }
 
-  function bindControl(id, action) {
+  function bindTouch(id, action) {
     const button = $(id);
 
     button.addEventListener("pointerdown", event => {
       event.preventDefault();
 
-      if (action === "jump") jump();
+      if (action === "p1jump") jump(players[0]);
+      else if (action === "p2jump") jump(players[1]);
       else if (action === "pipe") enterPipe();
       else keys[action] = true;
 
@@ -910,7 +855,7 @@
     });
 
     const release = () => {
-      if (action === "left" || action === "right") keys[action] = false;
+      if (action in keys) keys[action] = false;
     };
 
     button.addEventListener("pointerup", release);
@@ -923,55 +868,77 @@
     $("language").textContent = language === "en" ? "ES" : "EN";
     $("screen-language").textContent = language === "en" ? "ES" : "EN";
     $("menu-message").textContent = t("intro");
-    $("menu-bottom").textContent = t("move");
-    $("play").textContent = t("start");
-    $("music").textContent = musicEnabled ? t("musicOn") : t("musicOff");
-    updateHud();
+    $("menu-bottom").textContent = t("controls");
+    $("mode-button").textContent = twoPlayers ? t("two") : t("one");
+    $("music").textContent = musicEnabled ? "♫" : "♫×";
   }
 
   $("play").addEventListener("click", startGame);
+
+  $("mode-button").addEventListener("click", () => {
+    twoPlayers = !twoPlayers;
+    $("mode-button").textContent = twoPlayers ? t("two") : t("one");
+  });
+
   $("language").addEventListener("click", toggleLanguage);
   $("screen-language").addEventListener("click", toggleLanguage);
 
   $("music").addEventListener("click", () => {
     musicEnabled = !musicEnabled;
-    $("music").textContent = musicEnabled ? t("musicOn") : t("musicOff");
+    $("music").textContent = musicEnabled ? "♫" : "♫×";
     if (musicEnabled && running) startMusic();
     else stopMusic();
   });
 
-  bindControl("left", "left");
-  bindControl("right", "right");
-  bindControl("jump", "jump");
-  bindControl("action", "pipe");
+  bindTouch("p1left", "p1Left");
+  bindTouch("p1right", "p1Right");
+  bindTouch("p1jump", "p1jump");
+  bindTouch("p2left", "p2Left");
+  bindTouch("p2right", "p2Right");
+  bindTouch("p2jump", "p2jump");
+  bindTouch("pipe", "pipe");
 
   addEventListener("keydown", event => {
-    if (["ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown", " "].includes(event.key)) {
+    const key = event.key.toLowerCase();
+    if (["arrowleft", "arrowright", "arrowup", "arrowdown", " "].includes(key)) {
       event.preventDefault();
     }
 
-    if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") keys.left = true;
-    if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") keys.right = true;
-    if (event.key === "ArrowUp" || event.key === " ") jump();
-    if (event.key === "ArrowDown" || event.key.toLowerCase() === "s") enterPipe();
+    if (key === "arrowleft") keys.p1Left = true;
+    if (key === "arrowright") keys.p1Right = true;
+    if (key === "arrowup" || key === " ") jump(players[0]);
+    if (key === "arrowdown") enterPipe();
+
+    if (twoPlayers) {
+      if (key === "a") keys.p2Left = true;
+      if (key === "d") keys.p2Right = true;
+      if (key === "w") jump(players[1]);
+      if (key === "s") enterPipe();
+    }
   });
 
   addEventListener("keyup", event => {
-    if (event.key === "ArrowLeft" || event.key.toLowerCase() === "a") keys.left = false;
-    if (event.key === "ArrowRight" || event.key.toLowerCase() === "d") keys.right = false;
+    const key = event.key.toLowerCase();
+    if (key === "arrowleft") keys.p1Left = false;
+    if (key === "arrowright") keys.p1Right = false;
+    if (key === "a") keys.p2Left = false;
+    if (key === "d") keys.p2Right = false;
   });
 
   addEventListener("blur", () => {
-    keys.left = false;
-    keys.right = false;
+    Object.keys(keys).forEach(key => keys[key] = false);
   });
 
-  setCanvasSize();
-  prepareWorld();
-  $("menu-message").textContent = t("intro");
-  $("menu-bottom").textContent = t("move");
-  $("play").textContent = t("start");
-  requestAnimationFrame(frame);
+  addEventListener("resize", resize);
+
+  function initialize() {
+    resize();
+    setupWorld();
+    updateMenu();
+    requestAnimationFrame(frame);
+  }
+
+  initialize();
 })();
 </script>
 </body>
