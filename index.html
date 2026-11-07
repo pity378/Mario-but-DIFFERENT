@@ -15,7 +15,7 @@
   }
 
   body {
-    background: #75caff;
+    background: #617de8;
     color: white;
     font-family: system-ui, sans-serif;
     user-select: none;
@@ -24,9 +24,10 @@
   canvas {
     position: fixed;
     inset: 0;
-    display: block;
     width: 100%;
     height: 100%;
+    display: block;
+    image-rendering: pixelated;
   }
 
   #hud {
@@ -44,12 +45,12 @@
   }
 
   .badge, .hud-button {
-    border: 1px solid #ffffff80;
-    border-radius: 13px;
     padding: 8px 10px;
+    border: 2px solid #ffffffa8;
+    border-radius: 8px;
     color: white;
     background: #17243cbd;
-    font: 800 clamp(12px, 3.2vw, 16px) system-ui, sans-serif;
+    font: 800 clamp(11px, 3vw, 16px) system-ui, sans-serif;
   }
 
   .hud-button {
@@ -79,7 +80,7 @@
     width: clamp(54px, 15vw, 76px);
     height: clamp(54px, 15vw, 76px);
     border: 2px solid #ffffffc0;
-    border-radius: 19px;
+    border-radius: 13px;
     color: white;
     background: #30346ddd;
     font-size: 27px;
@@ -103,62 +104,140 @@
     inset: 0;
     display: grid;
     place-items: center;
+    overflow: auto;
+    padding: 22px;
+    background: #617de8;
+  }
+
+  #screen::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    opacity: .24;
+    background-image:
+      linear-gradient(90deg, transparent 96%, #fff 96%),
+      linear-gradient(transparent 96%, #fff 96%);
+    background-size: 24px 24px;
+    pointer-events: none;
+  }
+
+  #menu {
+    position: relative;
+    width: min(620px, 100%);
     padding: 20px;
-    background: #11172c66;
-  }
-
-  #card {
-    width: min(440px, 100%);
-    padding: 25px 20px;
-    border: 3px solid white;
-    border-radius: 25px;
-    background: linear-gradient(145deg, #fff8df, #ffe2ef);
-    box-shadow: 0 18px 60px #10172a66;
-    color: #242744;
     text-align: center;
+    font-family: "Courier New", monospace;
   }
 
-  #card h1 {
-    margin: 0 0 12px;
-    font-size: clamp(34px, 9vw, 52px);
-    line-height: 1;
+  .scoreline {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    margin: 0 auto 12px;
+    max-width: 520px;
+    font-size: clamp(12px, 3vw, 18px);
+    font-weight: 900;
+    text-shadow: 2px 2px #293675;
   }
 
-  #card p {
-    font-size: 16px;
-    line-height: 1.45;
+  #title-plaque {
+    margin: 0 auto 22px;
+    padding: clamp(20px, 6vw, 38px) 12px;
+    width: min(540px, 100%);
+    border: 7px solid #793416;
+    outline: 4px solid #f7bd83;
+    background: #df531d;
+    box-shadow: 0 9px 0 #57283a, inset 0 0 0 4px #ff9a55;
+    color: #fff0d4;
+    text-shadow: 4px 5px 0 #712d28;
+  }
+
+  #title-plaque h1 {
+    margin: 0;
+    font-size: clamp(35px, 11vw, 76px);
+    line-height: .95;
+    letter-spacing: -4px;
+  }
+
+  #title-plaque .subtitle {
+    display: block;
+    margin-top: 12px;
+    font-size: clamp(14px, 4vw, 24px);
+    font-weight: 900;
+    letter-spacing: 3px;
+  }
+
+  #copyright {
+    margin: 15px 0 24px;
+    font-size: clamp(12px, 3.5vw, 18px);
+    font-weight: 900;
+  }
+
+  #menu-message {
+    min-height: 48px;
+    margin: 0 auto 12px;
+    max-width: 480px;
+    font-family: system-ui, sans-serif;
+    font-size: clamp(14px, 3.6vw, 18px);
+    font-weight: 700;
+    line-height: 1.4;
   }
 
   #play {
-    border: 0;
-    border-radius: 15px;
-    padding: 14px 26px;
+    display: block;
+    margin: 10px auto;
+    padding: 13px 20px;
+    width: min(360px, 100%);
+    border: 3px solid #fff2c6;
+    border-radius: 4px;
     color: white;
-    background: linear-gradient(#ff9147, #e94e82);
-    box-shadow: 0 5px 0 #ba3f68;
-    font-size: 19px;
-    font-weight: 900;
+    background: #287e42;
+    box-shadow: 0 6px 0 #174b35;
+    font: 900 clamp(16px, 4vw, 22px) "Courier New", monospace;
     cursor: pointer;
   }
 
-  #note {
-    margin-bottom: 0;
-    color: #65677a;
-    font-size: 12px !important;
+  #play:active {
+    transform: translateY(4px);
+    box-shadow: 0 2px 0 #174b35;
+  }
+
+  #menu-bottom {
+    margin-top: 18px;
+    font-family: system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  #screen-language {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    z-index: 1;
+    padding: 8px 12px;
+    border: 2px solid white;
+    border-radius: 5px;
+    color: white;
+    background: #293675;
+    font-weight: 900;
   }
 
   .hidden { display: none !important; }
+
+  @media (max-height: 560px) {
+    #menu { padding: 8px; }
+    #title-plaque { margin-bottom: 12px; padding: 14px 8px; }
+    #copyright { margin: 8px 0 12px; }
+    #menu-bottom { margin-top: 8px; }
+  }
 </style>
 </head>
 <body>
 <canvas id="game" aria-label="Super Temu Bros game"></canvas>
 
 <div id="hud">
-  <div class="badge">
-    🪙 <span id="coins">0</span>
-    &nbsp; 💛 <span id="lives">3</span>
-  </div>
-  <div class="badge" id="levelLabel">Level 1</div>
+  <div class="badge">🪙 <span id="coins">0</span> &nbsp; 💛 <span id="lives">3</span></div>
+  <div class="badge" id="levelLabel">WORLD 1-1</div>
   <button class="hud-button" id="language" aria-label="Change language">ES</button>
   <button class="hud-button" id="music" aria-label="Toggle music">♫</button>
 </div>
@@ -175,14 +254,26 @@
 </div>
 
 <div id="screen">
-  <div id="card">
-    <h1 id="title">🛍️ Super Temu Bros</h1>
-    <p id="description">
-      Run, jump, collect coins, dodge grumpy parcels, and explore three worlds!
+  <button id="screen-language">ES</button>
+  <main id="menu">
+    <div class="scoreline">
+      <span id="menu-coins">COINS 000</span>
+      <span id="menu-world">WORLD 1-1</span>
+      <span id="menu-time">READY!</span>
+    </div>
+
+    <div id="title-plaque">
+      <h1>SUPER<br>TEMU BROS</h1>
+      <span class="subtitle">BARGAIN KINGDOM ADVENTURE</span>
+    </div>
+
+    <div id="copyright">★ A NEW PIXEL ADVENTURE ★</div>
+    <p id="menu-message">
+      Six worlds to explore! Collect coins, dodge grumpy parcels, and find the next pipe.
     </p>
-    <button id="play">Start playing!</button>
-    <p id="note">An original fan-made platform game with original art and music.</p>
-  </div>
+    <button id="play">▶ &nbsp; 1 PLAYER GAME</button>
+    <div id="menu-bottom">MOVE ◀ ▶ &nbsp; JUMP ⬆ &nbsp; PIPE ⬇</div>
+  </main>
 </div>
 
 <script>
@@ -196,7 +287,7 @@
   let width = innerWidth;
   let height = innerHeight;
   let pixelRatio = 1;
-  let groundY = height - 100;
+  let groundY = height - 90;
   let cameraX = 0;
   let lastFrameTime = 0;
   let language = "en";
@@ -204,6 +295,8 @@
   let coins = 0;
   let lives = 3;
   let levelIndex = 0;
+  let pickups = [];
+  let enemies = [];
 
   const keys = { left: false, right: false };
   const player = {
@@ -215,79 +308,127 @@
   let musicTimer = null;
   let musicEnabled = true;
   let musicNote = 0;
-  let pickups = [];
-  let enemies = [];
+
+  const worldNames = {
+    en: [
+      "Sunny Sale Hills",
+      "Bubblewrap Bay",
+      "Cardboard Canyon",
+      "Jellybean Jungle",
+      "Midnight Market",
+      "Golden Checkout"
+    ],
+    es: [
+      "Colinas de ofertas",
+      "Bahía de burbujas",
+      "Cañón de cartón",
+      "Selva de caramelos",
+      "Mercado nocturno",
+      "Caja dorada"
+    ]
+  };
 
   const translations = {
     en: {
-      intro: "Run, jump, collect coins, dodge grumpy parcels, and explore three worlds!",
-      start: "Start playing!",
-      again: "Play again",
-      failTitle: "📦 Oops!",
-      winTitle: "🏆 You did it!",
+      intro: "Six worlds to explore! Collect coins, dodge grumpy parcels, and find the next pipe.",
+      start: "▶   1 PLAYER GAME",
+      again: "▶   PLAY AGAIN",
+      failTitle: "📦 OOPS!",
+      winTitle: "🏆 YOU DID IT!",
       fail: "You ran out of lives. Ready for another try?",
-      win: "You conquered all three worlds. What a legendary shopping trip!",
-      levels: ["Sunny Sale Hills", "Bubblewrap Bay", "Midnight Market"],
-      level: n => `Level ${n + 1} · ${translations.en.levels[n]}`,
+      win: "You conquered all six worlds. What a legendary shopping trip!",
+      ready: "READY!",
+      move: "MOVE ◀ ▶   JUMP ⬆   PIPE ⬇",
       musicOn: "♫",
       musicOff: "♫×"
     },
     es: {
-      intro: "¡Corre, salta, recoge monedas, esquiva paquetes gruñones y explora tres mundos!",
-      start: "¡A jugar!",
-      again: "Jugar de nuevo",
-      failTitle: "📦 ¡Ups!",
-      winTitle: "🏆 ¡Lo lograste!",
+      intro: "¡Explora seis mundos! Recoge monedas, esquiva paquetes gruñones y encuentra la próxima tubería.",
+      start: "▶   JUGAR",
+      again: "▶   JUGAR DE NUEVO",
+      failTitle: "📦 ¡UPS!",
+      winTitle: "🏆 ¡LO LOGRASTE!",
       fail: "Te quedaste sin vidas. ¿Listo para intentarlo otra vez?",
-      win: "Conquistaste los tres mundos. ¡Qué viaje de compras legendario!",
-      levels: ["Colinas de ofertas", "Bahía de burbujas", "Mercado nocturno"],
-      level: n => `Nivel ${n + 1} · ${translations.es.levels[n]}`,
+      win: "Conquistaste los seis mundos. ¡Qué viaje de compras legendario!",
+      ready: "¡LISTO!",
+      move: "MOVER ◀ ▶   SALTAR ⬆   TUBERÍA ⬇",
       musicOn: "♫",
       musicOff: "♫×"
     }
   };
 
   const themes = [
-    { skyTop: "#5dc8ff", skyBottom: "#d6f7ff", hill: "#65c88b", ground: "#986044", grass: "#44bd72", pipe: "#2cb75d", coin: "#ffe27a" },
-    { skyTop: "#51b8d5", skyBottom: "#c8f4ec", hill: "#47aa9b", ground: "#8b5949", grass: "#42b89c", pipe: "#287f8e", coin: "#ffdc73" },
-    { skyTop: "#343b77", skyBottom: "#a8a2e8", hill: "#5555a0", ground: "#634c72", grass: "#6fbe86", pipe: "#59a86a", coin: "#fff0a0" }
+    { skyTop:"#5dc8ff", skyBottom:"#d6f7ff", hill:"#65c88b", ground:"#986044", grass:"#44bd72", pipe:"#2cb75d", coin:"#ffe27a" },
+    { skyTop:"#51b8d5", skyBottom:"#c8f4ec", hill:"#47aa9b", ground:"#8b5949", grass:"#42b89c", pipe:"#287f8e", coin:"#ffdc73" },
+    { skyTop:"#e89758", skyBottom:"#ffe1a2", hill:"#bb704d", ground:"#765044", grass:"#c78c53", pipe:"#468c65", coin:"#fff08a" },
+    { skyTop:"#5ab78d", skyBottom:"#c9f0a2", hill:"#3f9467", ground:"#705642", grass:"#57b95e", pipe:"#32834d", coin:"#ffe46f" },
+    { skyTop:"#343b77", skyBottom:"#a8a2e8", hill:"#5555a0", ground:"#634c72", grass:"#6fbe86", pipe:"#59a86a", coin:"#fff0a0" },
+    { skyTop:"#f19068", skyBottom:"#ffe5a7", hill:"#d6a64c", ground:"#916047", grass:"#71bd66", pipe:"#40975b", coin:"#fff37a" }
   ];
 
-  // Each platform/coin height is measured upward from the ground.
-  const levels = [
-    {
-      length: 2050,
-      gaps: [[440, 535], [900, 1000], [1435, 1540]],
-      ledges: [[250, 105, 78], [690, 115, 92], [1100, 110, 80], [1600, 120, 95]],
-      coins: [[295, 140], [385, 68], [735, 160], [850, 70], [1140, 145], [1370, 70], [1640, 165], [1810, 75]],
-      enemies: [[600, 535, 645, 65], [1030, 990, 1130, 75], [1535, 1490, 1635, 85], [1790, 1750, 1885, 90]],
-      pipeX: 1930
-    },
-    {
-      length: 2250,
-      gaps: [[390, 485], [850, 950], [1320, 1425], [1770, 1870]],
-      ledges: [[220, 115, 85], [575, 100, 75], [1000, 120, 90], [1485, 105, 78], [1920, 115, 85]],
-      coins: [[260, 165], [350, 75], [615, 145], [800, 75], [1040, 165], [1260, 75], [1520, 150], [1715, 75], [1955, 160], [2110, 75]],
-      enemies: [[520, 480, 620, 75], [960, 950, 1060, 80], [1435, 1425, 1535, 90], [1880, 1870, 1970, 95]],
-      pipeX: 2130
-    },
-    {
-      length: 2450,
-      gaps: [[460, 565], [960, 1065], [1510, 1615], [2020, 2120]],
-      ledges: [[260, 105, 78], [680, 120, 90], [1130, 110, 82], [1690, 125, 95], [2180, 110, 82]],
-      coins: [[300, 150], [420, 70], [715, 170], [900, 75], [1165, 155], [1450, 75], [1735, 180], [1950, 75], [2220, 165], [2350, 75]],
-      enemies: [[590, 565, 675, 80], [1080, 1065, 1175, 85], [1630, 1615, 1725, 90], [2130, 2120, 2230, 100]],
-      pipeX: 2330
-    }
-  ];
+  // World layouts are generated from each world's settings.
+  function makeWorlds() {
+    return themes.map((theme, index) => {
+      const length = 2400 + index * 240;
+      const gapCount = 3 + Math.floor(index / 2);
+      const gapWidth = 92 + index * 6;
+      const gaps = [];
+      const ledges = [];
+      const coinSpots = [];
+      const enemySpots = [];
 
-  function t(key, ...args) {
-    const value = translations[language][key];
-    return typeof value === "function" ? value(...args) : value;
+      for (let i = 0; i < gapCount; i++) {
+        const start = 430 + i * 470;
+        gaps.push([start, start + gapWidth]);
+
+        // Low, reachable platforms near gaps.
+        ledges.push([start - 155, 108 + (i % 2) * 10, 78 + (index % 3) * 8]);
+        coinSpots.push([start - 112, 145 + (i % 2) * 12]);
+        coinSpots.push([start + gapWidth + 58, 68]);
+
+        const enemyX = start + gapWidth + 135;
+        if (enemyX < length - 210) {
+          enemySpots.push([
+            enemyX,
+            enemyX - 45,
+            enemyX + 70,
+            55 + index * 9
+          ]);
+        }
+      }
+
+      // Extra raised platforms and coins make each world feel distinct.
+      for (let i = 0; i < 3; i++) {
+        const x = 250 + i * 660 + index * 25;
+        if (x + 140 < length - 180) {
+          ledges.push([x, 118, 100 + ((i + index) % 3) * 12]);
+          coinSpots.push([x + 50, 145 + ((i + index) % 3) * 12]);
+        }
+      }
+
+      return {
+        length,
+        gaps,
+        ledges,
+        coins: coinSpots,
+        enemies: enemySpots,
+        pipeX: length - 105
+      };
+    });
   }
 
-  function currentLevel() {
-    return levels[levelIndex];
+  const worlds = makeWorlds();
+
+  function t(key) {
+    return translations[language][key];
+  }
+
+  function currentWorld() {
+    return worlds[levelIndex];
+  }
+
+  function worldLabel() {
+    return `WORLD ${levelIndex + 1}-1`;
   }
 
   function setCanvasSize() {
@@ -301,7 +442,6 @@
 
     groundY = height - (width < 600 ? 108 : 88);
 
-    // Recalculate pickup positions on resize without resetting collected coins.
     for (const pickup of pickups) {
       pickup.y = groundY - pickup.height;
     }
@@ -310,31 +450,28 @@
       player.y = groundY - player.height;
     }
 
-    updateLevelLabel();
-  }
-
-  function updateLevelLabel(nearPipe = false) {
-    $("levelLabel").textContent =
-      t("level", levelIndex) + (nearPipe ? " · ⬇" : "");
+    updateHud();
   }
 
   function updateHud() {
     $("coins").textContent = coins;
     $("lives").textContent = lives;
-    updateLevelLabel();
+    $("levelLabel").textContent = worldLabel();
+    $("menu-world").textContent = worldLabel();
+    $("menu-coins").textContent = `COINS ${String(coins).padStart(3, "0")}`;
   }
 
-  function prepareLevel() {
-    const level = currentLevel();
+  function prepareWorld() {
+    const world = currentWorld();
 
-    pickups = level.coins.map(([x, height]) => ({
+    pickups = world.coins.map(([x, coinHeight]) => ({
       x,
-      height,
-      y: groundY - height,
+      height: coinHeight,
+      y: groundY - coinHeight,
       collected: false
     }));
 
-    enemies = level.enemies.map(([x, min, max, speed]) => ({
+    enemies = world.enemies.map(([x, min, max, speed]) => ({
       x, min, max, speed, direction: 1, alive: true
     }));
 
@@ -352,19 +489,22 @@
     coins = 0;
     lives = 3;
     levelIndex = 0;
-    prepareLevel();
+    prepareWorld();
     running = true;
     $("screen").classList.add("hidden");
     startMusic();
     lastFrameTime = performance.now();
   }
 
-  function finishGame(won) {
+  function endGame(won) {
     running = false;
     stopMusic();
 
-    $("title").textContent = won ? t("winTitle") : t("failTitle");
-    $("description").textContent = won ? t("win") : t("fail");
+    $("title-plaque").innerHTML = won
+      ? `<h1>WORLD<br>COMPLETE!</h1><span class="subtitle">SUPER TEMU BROS</span>`
+      : `<h1>GAME<br>OVER</h1><span class="subtitle">SUPER TEMU BROS</span>`;
+
+    $("menu-message").textContent = won ? t("win") : t("fail");
     $("play").textContent = t("again");
     $("screen").classList.remove("hidden");
   }
@@ -379,8 +519,8 @@
     audioContext.resume();
     clearInterval(musicTimer);
 
-    // Original short chiptune phrase.
-    const notes = [523, 659, 784, 659, 587, 698, 880, 698, 523, 659, 784, 988, 880, 784, 659, 587];
+    // Original chiptune notes, written for this game.
+    const notes = [523,659,784,659,587,698,880,698,523,659,784,988,880,784,659,587];
 
     musicTimer = setInterval(() => {
       if (!running || !musicEnabled || !audioContext) return;
@@ -415,18 +555,21 @@
   function enterPipe() {
     if (!running || !player.grounded) return;
 
-    const distance = Math.abs((player.x + player.width / 2) - currentLevel().pipeX);
-    if (distance > 68) return;
+    const distance = Math.abs(
+      player.x + player.width / 2 - currentWorld().pipeX
+    );
 
-    if (levelIndex < levels.length - 1) {
+    if (distance > 72) return;
+
+    if (levelIndex < worlds.length - 1) {
       levelIndex++;
-      prepareLevel();
+      prepareWorld();
     } else {
-      finishGame(true);
+      endGame(true);
     }
   }
 
-  function intersects(a, b) {
+  function overlaps(a, b) {
     return a.x < b.x + b.width &&
       a.x + a.width > b.x &&
       a.y < b.y + b.height &&
@@ -440,11 +583,10 @@
     updateHud();
 
     if (lives <= 0) {
-      finishGame(false);
+      endGame(false);
       return;
     }
 
-    // Respawn at this level's start and briefly protect the player.
     player.x = 60;
     player.y = groundY - player.height - 4;
     player.vx = 0;
@@ -454,23 +596,24 @@
     cameraX = 0;
   }
 
-  function groundSupportsPlayer() {
-    const center = player.x + player.width / 2;
-    return !currentLevel().gaps.some(([start, end]) => center > start && center < end);
+  function isOverGap() {
+    const playerCenter = player.x + player.width / 2;
+    return currentWorld().gaps.some(
+      ([start, end]) => playerCenter > start && playerCenter < end
+    );
   }
 
   function update(deltaTime) {
     if (!running) return;
 
     const dt = Math.min(deltaTime, 0.033);
-    const level = currentLevel();
+    const world = currentWorld();
 
     player.invulnerable = Math.max(0, player.invulnerable - dt);
-
     player.vx = ((keys.right ? 1 : 0) - (keys.left ? 1 : 0)) * 300;
     player.x = Math.max(
       0,
-      Math.min(level.length - player.width, player.x + player.vx * dt)
+      Math.min(world.length - player.width, player.x + player.vx * dt)
     );
 
     const previousBottom = player.y + player.height;
@@ -478,9 +621,9 @@
     player.y += player.vy * dt;
     player.grounded = false;
 
-    // Land on the ground only when the player is not over a gap.
+    // Ground collision, except over gaps.
     if (
-      groundSupportsPlayer() &&
+      !isOverGap() &&
       player.vy >= 0 &&
       previousBottom <= groundY + 2 &&
       player.y + player.height >= groundY
@@ -490,15 +633,15 @@
       player.grounded = true;
     }
 
-    // Land on the level's raised platforms.
-    for (const [x, platformWidth, platformHeight] of level.ledges) {
+    // Raised platform collision.
+    for (const [platformX, platformWidth, platformHeight] of world.ledges) {
       const platformY = groundY - platformHeight;
-      const overlapsX =
-        player.x + player.width > x &&
-        player.x < x + platformWidth;
+      const overPlatform =
+        player.x + player.width > platformX &&
+        player.x < platformX + platformWidth;
 
       if (
-        overlapsX &&
+        overPlatform &&
         player.vy >= 0 &&
         previousBottom <= platformY + 3 &&
         player.y + player.height >= platformY
@@ -509,23 +652,23 @@
       }
     }
 
+    // Collect coins.
     for (const pickup of pickups) {
       if (pickup.collected) continue;
 
-      const coinBox = {
+      if (overlaps(player, {
         x: pickup.x - 11,
         y: pickup.y - 12,
         width: 22,
         height: 24
-      };
-
-      if (intersects(player, coinBox)) {
+      })) {
         pickup.collected = true;
         coins++;
         updateHud();
       }
     }
 
+    // Enemies can be jumped on or avoided.
     for (const enemy of enemies) {
       if (!enemy.alive) continue;
 
@@ -542,9 +685,8 @@
         height: 31
       };
 
-      if (!intersects(player, enemyBox)) continue;
+      if (!overlaps(player, enemyBox)) continue;
 
-      // Jump on top of a parcel to defeat it; otherwise lose a life.
       if (player.vy > 100 && previousBottom <= enemyBox.y + 14) {
         enemy.alive = false;
         player.vy = -390;
@@ -554,19 +696,17 @@
       break;
     }
 
-    // Check once, then respawn; avoid repeatedly subtracting lives while falling.
     if (player.y > height + 80) {
       loseLife();
     }
 
     if (!running) return;
 
-    const nearPipe =
-      player.grounded &&
-      Math.abs((player.x + player.width / 2) - level.pipeX) < 90;
-
-    updateLevelLabel(nearPipe);
-    cameraX = Math.max(0, Math.min(level.length - width, player.x - width * 0.36));
+    cameraX = Math.max(
+      0,
+      Math.min(world.length - width, player.x - width * 0.36)
+    );
+    updateHud();
   }
 
   function drawBackground(theme) {
@@ -588,6 +728,7 @@
     for (let i = 0; i < 7; i++) {
       const x = ((i * 270 - cameraX * 0.12) % (width + 280) + width + 280) % (width + 280) - 100;
       const y = 76 + (i % 3) * 48;
+
       ctx.beginPath();
       ctx.arc(x, y, 23, 0, Math.PI * 2);
       ctx.arc(x + 29, y - 12, 31, 0, Math.PI * 2);
@@ -607,7 +748,7 @@
     ctx.fillStyle = theme.ground;
     ctx.fillRect(x, groundY + 14, groundWidth, height - groundY);
 
-    ctx.fillStyle = "#ffffff20";
+    ctx.fillStyle = "#ffffff25";
     for (let tileX = x + 18; tileX < x + groundWidth; tileX += 58) {
       ctx.fillRect(tileX, groundY + 36, 27, 4);
     }
@@ -620,7 +761,8 @@
     ctx.fillStyle = theme.pipe;
     ctx.fillRect(screenX + 7, y + 10, 52, 52);
     ctx.fillRect(screenX, y, 66, 19);
-    ctx.fillStyle = "#ffffff45";
+
+    ctx.fillStyle = "#ffffff50";
     ctx.fillRect(screenX + 7, y + 3, 10, 12);
     ctx.fillStyle = "#00000020";
     ctx.fillRect(screenX + 54, y + 4, 8, 55);
@@ -635,9 +777,10 @@
   }
 
   function drawPlayer() {
-    if (player.invulnerable > 0 && Math.floor(player.invulnerable * 12) % 2 === 0) {
-      return;
-    }
+    if (
+      player.invulnerable > 0 &&
+      Math.floor(player.invulnerable * 12) % 2 === 0
+    ) return;
 
     const x = player.x - cameraX;
     const y = player.y;
@@ -700,18 +843,18 @@
 
   function draw() {
     const theme = themes[levelIndex];
-    const level = currentLevel();
+    const world = currentWorld();
 
     drawBackground(theme);
 
     let groundStart = 0;
-    for (const [gapStart, gapEnd] of level.gaps) {
+    for (const [gapStart, gapEnd] of world.gaps) {
       drawGround(groundStart, gapStart, theme);
       groundStart = gapEnd;
     }
-    drawGround(groundStart, level.length, theme);
+    drawGround(groundStart, world.length, theme);
 
-    for (const [x, platformWidth, platformHeight] of level.ledges) {
+    for (const [x, platformWidth, platformHeight] of world.ledges) {
       const screenX = x - cameraX;
       const y = groundY - platformHeight;
 
@@ -731,18 +874,17 @@
       ctx.beginPath();
       ctx.ellipse(x, pickup.y, 10, 14, 0, 0, Math.PI * 2);
       ctx.fill();
-
       ctx.fillStyle = "#fff7c0";
       ctx.fillRect(x - 2, pickup.y - 8, 4, 16);
     }
 
     for (const enemy of enemies) drawEnemy(enemy);
 
-    const playerNearPipe =
+    const nearPipe =
       player.grounded &&
-      Math.abs((player.x + player.width / 2) - level.pipeX) < 90;
+      Math.abs(player.x + player.width / 2 - world.pipeX) < 90;
 
-    drawPipe(level.pipeX, theme, playerNearPipe);
+    drawPipe(world.pipeX, theme, nearPipe);
     drawPlayer();
   }
 
@@ -776,20 +918,25 @@
     button.addEventListener("lostpointercapture", release);
   }
 
-  $("play").addEventListener("click", startGame);
-
-  $("language").addEventListener("click", () => {
+  function toggleLanguage() {
     language = language === "en" ? "es" : "en";
     $("language").textContent = language === "en" ? "ES" : "EN";
-    $("description").textContent = t("intro");
-    $("play").textContent = running ? t("start") : t("start");
-    updateLevelLabel();
-  });
+    $("screen-language").textContent = language === "en" ? "ES" : "EN";
+    $("menu-message").textContent = t("intro");
+    $("menu-bottom").textContent = t("move");
+    $("play").textContent = t("start");
+    $("music").textContent = musicEnabled ? t("musicOn") : t("musicOff");
+    updateHud();
+  }
+
+  $("play").addEventListener("click", startGame);
+  $("language").addEventListener("click", toggleLanguage);
+  $("screen-language").addEventListener("click", toggleLanguage);
 
   $("music").addEventListener("click", () => {
     musicEnabled = !musicEnabled;
     $("music").textContent = musicEnabled ? t("musicOn") : t("musicOff");
-    if (musicEnabled) startMusic();
+    if (musicEnabled && running) startMusic();
     else stopMusic();
   });
 
@@ -820,8 +967,10 @@
   });
 
   setCanvasSize();
-  prepareLevel();
-  $("description").textContent = t("intro");
+  prepareWorld();
+  $("menu-message").textContent = t("intro");
+  $("menu-bottom").textContent = t("move");
+  $("play").textContent = t("start");
   requestAnimationFrame(frame);
 })();
 </script>
